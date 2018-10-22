@@ -155,6 +155,24 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &245270481 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1994487051172088, guid: 9acb848bfef3d0b4da4f16bae62b8548,
+    type: 2}
+  m_PrefabInternal: {fileID: 620197216}
+--- !u!114 &245270488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 245270481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0afd16542664b429ead01c0390ecf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  renderTarget: {fileID: 0}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,7 +185,7 @@ GameObject:
   - component: {fileID: 534669903}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -209,7 +227,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: e91a6140a0c58374f96404db84d8e2e5, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -279,7 +297,8 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 137.056
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114920351912725774, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &752852503
@@ -293,6 +312,7 @@ GameObject:
   - component: {fileID: 752852506}
   - component: {fileID: 752852505}
   - component: {fileID: 752852504}
+  - component: {fileID: 752852509}
   m_Layer: 0
   m_Name: Mars
   m_TagString: Untagged
@@ -367,6 +387,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &752852509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 752852503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0afd16542664b429ead01c0390ecf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  renderTarget: {fileID: 0}
 --- !u!1 &917413763
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +411,7 @@ GameObject:
   - component: {fileID: 917413766}
   - component: {fileID: 917413765}
   - component: {fileID: 917413764}
+  - component: {fileID: 917413769}
   m_Layer: 0
   m_Name: Venus
   m_TagString: Untagged
@@ -452,6 +486,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -34.268, z: 0}
+--- !u!114 &917413769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 917413763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0afd16542664b429ead01c0390ecf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  renderTarget: {fileID: 0}
 --- !u!1 &1341896036
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,6 +510,7 @@ GameObject:
   - component: {fileID: 1341896039}
   - component: {fileID: 1341896038}
   - component: {fileID: 1341896037}
+  - component: {fileID: 1341896042}
   m_Layer: 0
   m_Name: Jupiter
   m_TagString: Untagged
@@ -537,6 +585,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -37.548, y: 72.9, z: 0}
+--- !u!114 &1341896042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1341896036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0afd16542664b429ead01c0390ecf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  renderTarget: {fileID: 0}
 --- !u!1 &1354270094
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,6 +609,7 @@ GameObject:
   - component: {fileID: 1354270097}
   - component: {fileID: 1354270096}
   - component: {fileID: 1354270095}
+  - component: {fileID: 1354270100}
   m_Layer: 0
   m_Name: Earth
   m_TagString: Untagged
@@ -622,3 +684,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1354270100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1354270094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0afd16542664b429ead01c0390ecf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  renderTarget: {fileID: 0}

@@ -53,7 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\MyRenderer.cs" />
+     <Compile Include="Assets\UVCoordinateRenderer.cs" />
      <None Include="Assets\Shader\Tiling2.compute" />
      <None Include="Assets\Textures\Credits.txt" />
      <None Include="Assets\Shader\TilingTest.shader" />
