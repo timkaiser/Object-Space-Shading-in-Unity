@@ -53,9 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Shader\NewBehaviourScript.cs" />
+     <Compile Include="Assets\MyRenderer.cs" />
      <None Include="Assets\Shader\Tiling2.compute" />
-     <None Include="Assets\Shader\NewUnlitShader.shader" />
      <None Include="Assets\Textures\Credits.txt" />
      <None Include="Assets\Shader\TilingTest.shader" />
  <Reference Include="Unity.RenderPipelines.Core.Editor">

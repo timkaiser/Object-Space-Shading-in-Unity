@@ -209,7 +209,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: e91a6140a0c58374f96404db84d8e2e5, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -257,7 +257,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4796541799931512, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.9305975
       objectReference: {fileID: 0}
     - target: {fileID: 4796541799931512, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
       propertyPath: m_LocalRotation.z
@@ -265,7 +265,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4796541799931512, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.36604425
       objectReference: {fileID: 0}
     - target: {fileID: 4796541799931512, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
       propertyPath: m_RootOrder
@@ -274,6 +274,10 @@ Prefab:
     - target: {fileID: 1994487051172088, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
       propertyPath: m_Name
       value: Mercury (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4796541799931512, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 137.056
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9acb848bfef3d0b4da4f16bae62b8548, type: 2}
@@ -441,13 +445,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 917413763}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.29460526, z: -0, w: 0.9556191}
   m_LocalPosition: {x: 5.44, y: 1.88, z: -2.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -34.268, z: 0}
 --- !u!1 &1341896036
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,13 +530,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1341896036}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.2588786, y: 0.5625126, z: 0.1912117, w: 0.76157707}
   m_LocalPosition: {x: -14.24, y: 0, z: 9.21}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -37.548, y: 72.9, z: 0}
 --- !u!1 &1354270094
 GameObject:
   m_ObjectHideFlags: 0

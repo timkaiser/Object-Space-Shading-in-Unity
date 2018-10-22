@@ -1,10 +1,10 @@
-Shader "Unlit/TilingTest"
+Shader "Custom/TilingTest"
 {
 	
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_tiling("tiling", 2D) = "white" {}
+		_RenderTarget ("Texture", 2D) = "white" {}
 	}
 	
 	SubShader
@@ -55,12 +55,13 @@ Shader "Unlit/TilingTest"
 			// EDITED:
 			fixed4 frag (v2f i) : SV_Target
 			{
-				//tiles[i.uv] = float4(1.0,0.0,0.0,1.0);
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-				// apply fog
-				UNITY_APPLY_FOG(i.fogCoord, col);
-				return col;
+				//original code:
+				//fixed4 col = tex2D(_MainTex, i.uv);
+				//return col;
+				
+
+				//my code:
+				return fixed4(i.uv.r,i.uv.g,0,1);
 			}
 			ENDCG
 		}
