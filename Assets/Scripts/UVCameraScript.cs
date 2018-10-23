@@ -10,7 +10,7 @@ public class UVCameraScript : MonoBehaviour {
     //Object that has to be rendered
     [SerializeField]
     private GameObject targetObject;
-
+    
     //UVCoordinateRenderer Script
     UVCoordinateRenderer uvScript;
 

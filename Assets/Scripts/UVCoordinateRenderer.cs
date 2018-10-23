@@ -38,7 +38,7 @@ public class UVCoordinateRenderer : MonoBehaviour {
         cam.targetTexture = renderTarget;
 
         //Find compute shader
-        hiddenSurfaceRemovalCS = (ComputeShader)Resources.Load("Shader/HiddenSurfaceRemovalShader");
+        hiddenSurfaceRemovalCS = (ComputeShader)Instantiate(Resources.Load("Shader/HiddenSurfaceRemovalShader"));
         CSkernel = hiddenSurfaceRemovalCS.FindKernel("HiddenSurfaceRemovalCS");
 
         //Initialize Rendertexture for after hidden surface removal
@@ -53,9 +53,8 @@ public class UVCoordinateRenderer : MonoBehaviour {
     }
     
     public void RemoveHiddenSurface() {
-        if (gameObject.name == "Mars") {
-            hiddenSurfaceRemovalCS.Dispatch(CSkernel, renderTargetFinal.width / 8, renderTargetFinal.height / 8, 1);
-        }
+        hiddenSurfaceRemovalCS.Dispatch(CSkernel, renderTargetFinal.width / 8, renderTargetFinal.height / 8, 1);
+        
     }
 
 }
