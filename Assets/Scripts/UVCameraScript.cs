@@ -11,6 +11,9 @@ public class UVCameraScript : MonoBehaviour {
     [SerializeField]
     private GameObject targetObject;
 
+    //UVCoordinateRenderer Script
+    UVCoordinateRenderer uvScript;
+
     void Start() {
         //Set camera layer to render layer
         Camera camera = gameObject.GetComponent<Camera>();
@@ -28,6 +31,7 @@ public class UVCameraScript : MonoBehaviour {
     public void SetTargetObject(GameObject o) {
         targetObject = o;
         objectLayer = o.layer;
+        uvScript = targetObject.GetComponent<UVCoordinateRenderer>();
     }
 
     //move object to render layer
@@ -40,5 +44,6 @@ public class UVCameraScript : MonoBehaviour {
     //move object back to original layer
     void OnPostRender() {
         targetObject.layer = objectLayer;
+        uvScript.RemoveHiddenSurface();
     }
 }
