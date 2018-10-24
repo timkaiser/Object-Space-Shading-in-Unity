@@ -1,8 +1,6 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel HiddenSurfaceRemovalCS
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
 Texture2D<float4> mainCamera;
 Texture2D<float4> renderTarget;
 RWTexture2D<float4> result;
@@ -10,7 +8,6 @@ RWTexture2D<float4> result;
 [numthreads(8, 8, 1)]
 void HiddenSurfaceRemovalCS(uint3 id : SV_DispatchThreadID)
 {
-	// TODO: insert actual code here!
-
-	result[id.xy] = (mainCamera[id.xy] == renderTarget[id.xy]) ? renderTarget[id.xy] : float4(1.0, 1.0, 1.0, 1.0);
+	//remove pixel that are not the same on both the image of the main camera and the rendertarget of the object camera
+	result[id.xy] = (distance(mainCamera[id.xy],renderTarget[id.xy])==0) ? renderTarget[id.xy] : float4(1.0, 1.0, 1.0, 1.0);
 }

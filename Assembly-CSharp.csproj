@@ -63,6 +63,8 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\UVCameraScript.cs" />
     <Compile Include="Assets\Scripts\UVCoordinateRenderer.cs" />
+    <Compile Include="Assets\Scripts\UVtoTextureMapper.cs" />
+    <None Include="Assets\Resources\Shader\UVtoTextureMappingShader.compute" />
     <None Include="Assets\Resources\Shader\HiddenSurfaceRemovalShader.compute" />
     <None Include="Assets\Resources\Textures\Credits.txt" />
     <None Include="Assets\Resources\Shader\UVCoordRenderShader.shader" />

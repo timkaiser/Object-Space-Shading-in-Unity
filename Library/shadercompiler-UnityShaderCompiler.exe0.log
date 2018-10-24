@@ -1,55 +1,86 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=628 outsize=627 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=545 outsize=544 ok=1
-Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=545 outsize=544 ok=1
-Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=478 outsize=477 ok=1
-Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=568 outsize=567 ok=1
+Cmd: preprocess
+  insize=877 outsize=243 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1075 outsize=690 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1075 outsize=286 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
 Cmd: initializeCompiler
 Cmd: preprocessCompute
   insize=545 outsize=544 ok=1
 Cmd: initializeCompiler
 Cmd: preprocessCompute
   insize=545 outsize=544 ok=1
+Cmd: preprocess
+  insize=877 outsize=243 ok=1
 Cmd: initializeCompiler
 Cmd: preprocessCompute
   insize=545 outsize=544 ok=1
 Cmd: initializeCompiler
 Cmd: preprocessCompute
-  insize=545 outsize=544 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=545 outsize=544 ok=1
+  insize=703 outsize=702 ok=1
 Cmd: initializeCompiler
 Cmd: preprocessCompute
   insize=545 outsize=544 ok=1
 Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=551 outsize=550 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: preprocessCompute
-  insize=553 outsize=552 ok=1
+  insize=500 outsize=499 ok=1
 Cmd: initializeCompiler
 Cmd: preprocessCompute
-  insize=545 outsize=544 ok=1
+  insize=529 outsize=528 ok=1
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: preprocessCompute
-  insize=545 outsize=544 ok=1
+  insize=625 outsize=624 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=630 outsize=629 ok=1
+Cmd: preprocessCompute
+  insize=633 outsize=632 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=635 outsize=634 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocess
+  insize=906 outsize=243 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (40): Output value 'vert' is not completely initialized\nCompiling Vertex program
+Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR
+  api=4 type=0 insize=1104 outsize=714 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1104 outsize=310 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: preprocessCompute
+  insize=415 outsize=414 ok=1
+Cmd: preprocessCompute
+  insize=422 outsize=421 ok=1
+Cmd: preprocessCompute
+  insize=424 outsize=423 ok=1
+Cmd: preprocessCompute
+  insize=438 outsize=437 ok=1
+Cmd: preprocess
+  insize=875 outsize=243 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1073 outsize=690 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1073 outsize=286 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=546 outsize=545 ok=1
+Cmd: preprocessCompute
+  insize=437 outsize=436 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler

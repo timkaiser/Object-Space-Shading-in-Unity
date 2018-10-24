@@ -1,0 +1,16 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel UVtoTextureMappingCS
+
+//input
+Texture2D<float4> uvCoords;
+Texture2D<float4> objectTexture;
+
+//output
+RWTexture2D<float4> result;
+
+[numthreads(8,8,1)]
+void UVtoTextureMappingCS(uint3 id : SV_DispatchThreadID)
+{
+	float2 uv = uvCoords[id.xy].rg;
+	result[uv] = (uvCoords[id.xy].b == 0.0) ? objectTexture[uv] : float4(1, 1, 1, 1);
+}

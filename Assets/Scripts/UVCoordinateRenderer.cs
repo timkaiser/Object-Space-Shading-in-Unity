@@ -12,20 +12,22 @@ public class UVCoordinateRenderer : MonoBehaviour {
     [SerializeField]
     private RenderTexture renderTarget;
     [SerializeField]
-    private RenderTexture renderTargetFinal;
+    //render texture with final uv coordinates of visible surfaces
+    private RenderTexture renderTargetWithoutHiddenSurfaces;
 
-    //compute shader
+    //compute shader and compute shader kernel
     private ComputeShader hiddenSurfaceRemovalCS;
     private int CSkernel;
 
-    //main
-    private static RenderTexture mainImage;
+    //image of main camera
+    private static RenderTexture mainCameraImage;
 
     // Use this for initialization
     void Start () {
         //Find the main camera
         GameObject mainCamera = GameObject.FindWithTag("MainCamera");
-        mainImage = mainCamera.GetComponent<Camera>().targetTexture;
+        mainCameraImage = mainCamera.GetComponent<Camera>().targetTexture;
+
 
         //clone the main camera
         GameObject renderCamera = Instantiate((GameObject)Resources.Load("Prefabs/UVCamera"));
@@ -33,7 +35,7 @@ public class UVCoordinateRenderer : MonoBehaviour {
         renderCamera.transform.SetParent(mainCamera.transform);
         cam = renderCamera.GetComponent<Camera>();
 
-        //set new render target to render texture
+        //set new render target to render texture of cloned main camera
         renderTarget = new RenderTexture(800,600,24);
         cam.targetTexture = renderTarget;
 
@@ -42,19 +44,23 @@ public class UVCoordinateRenderer : MonoBehaviour {
         CSkernel = hiddenSurfaceRemovalCS.FindKernel("HiddenSurfaceRemovalCS");
 
         //Initialize Rendertexture for after hidden surface removal
-        renderTargetFinal = new RenderTexture(renderTarget.width, renderTarget.height, renderTarget.depth);
-        renderTargetFinal.enableRandomWrite = true;
-        renderTargetFinal.Create();
-        hiddenSurfaceRemovalCS.SetTexture(CSkernel, "result", renderTargetFinal);
+        renderTargetWithoutHiddenSurfaces = new RenderTexture(renderTarget.width, renderTarget.height, renderTarget.depth);
+        renderTargetWithoutHiddenSurfaces.enableRandomWrite = true;
+        renderTargetWithoutHiddenSurfaces.Create();
 
-
-        hiddenSurfaceRemovalCS.SetTexture(CSkernel, "mainCamera", mainImage);
+        //set parameters of the compute shader
+        hiddenSurfaceRemovalCS.SetTexture(CSkernel, "result", renderTargetWithoutHiddenSurfaces);
+        hiddenSurfaceRemovalCS.SetTexture(CSkernel, "mainCamera", mainCameraImage);
         hiddenSurfaceRemovalCS.SetTexture(CSkernel, "renderTarget", renderTarget);
     }
     
+    //removes parts of objects that are hidden
     public void RemoveHiddenSurface() {
-        hiddenSurfaceRemovalCS.Dispatch(CSkernel, renderTargetFinal.width / 8, renderTargetFinal.height / 8, 1);
-        
+        //call compute shader
+        hiddenSurfaceRemovalCS.Dispatch(CSkernel, renderTargetWithoutHiddenSurfaces.width / 8, renderTargetWithoutHiddenSurfaces.height / 8, 1);      
     }
 
+    public RenderTexture getRenderTarget() {
+        return renderTarget;
+    }
 }
