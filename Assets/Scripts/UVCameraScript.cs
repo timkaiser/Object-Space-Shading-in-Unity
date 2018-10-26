@@ -47,6 +47,6 @@ public class UVCameraScript : MonoBehaviour {
     void OnPostRender() {
         targetObject.layer = objectLayer;
         uvScript.RemoveHiddenSurface();
-        mapScript.mapUVtoTexture();
+        //mapScript.mapUVtoTexture();
     }
 }

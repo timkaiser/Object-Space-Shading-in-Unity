@@ -15,7 +15,7 @@ public class UVtoTextureMapper : MonoBehaviour {
     [SerializeField]
     private RenderTexture renderTarget;
 
-
+    /** /
     // Use this for initialization
     void Start() {
         renderTarget = (gameObject.GetComponent<UVCoordinateRenderer>()).getRenderTarget();
@@ -44,5 +44,5 @@ public class UVtoTextureMapper : MonoBehaviour {
         renderTarget = (gameObject.GetComponent<UVCoordinateRenderer>()).getRenderTarget();
         //call compute shader
         //uvToTextureMappingCS.Dispatch(CSkernel, renderTarget.width / 8, renderTarget.height / 8, 1);
-    }
+    }/**/
 }

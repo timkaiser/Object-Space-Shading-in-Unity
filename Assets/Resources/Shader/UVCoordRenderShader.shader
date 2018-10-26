@@ -1,6 +1,6 @@
 Shader "Custom/UVCoordRenderShader"
 {
-	
+	//Unity generated code:
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
@@ -36,6 +36,7 @@ Shader "Custom/UVCoordRenderShader"
 			float4 _MainTex_ST;
 			//static RWTexture2D<float4> tiles = NULL;
 
+			//vertex shader
 			v2f vert (appdata v)
 			{
 				v2f o;
@@ -47,9 +48,10 @@ Shader "Custom/UVCoordRenderShader"
 
 
 			// EDITED:
+			//fragment shader
 			fixed4 frag (v2f i) : SV_Target
 			{
-				//my code:
+				//displays uv coordinats in render target (u,v,0,1)
 				return fixed4(i.uv.r,i.uv.g,0,1);
 			}
 			ENDCG
