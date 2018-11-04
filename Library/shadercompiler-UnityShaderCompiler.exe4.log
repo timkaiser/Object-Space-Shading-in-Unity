@@ -1,22 +1,36 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=528 outsize=305 ok=1
+  error: 2 plat 4 at DebugCS.compute(15): syntax error: unexpected token '}'
+  api=4 insize=395 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=624 outsize=617 ok=1
+  error: 2 plat 4 at DebugCS.compute(17): invalid type for index - index must be a scalar, or a vector with the correct number of dimensions
+  api=4 insize=497 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=634 outsize=697 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  error: 2 plat 4 at DebugCS.compute(16): undeclared identifier 'Debug'
+  api=4 insize=511 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
