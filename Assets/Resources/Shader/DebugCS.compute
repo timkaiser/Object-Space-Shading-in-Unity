@@ -1,0 +1,18 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel DebugCS
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+Texture2D<float4> UV;
+Texture2D<float4> Normal;
+Texture2D<float4> WorldPos;
+
+[numthreads(8,8,1)]
+void DebugCS (uint3 id : SV_DispatchThreadID)
+{
+	int x = 512 * UV[id.xy].x;
+	int y = 512 * UV[id.xy].y;
+
+	Result[int2(x, y)] = float4(UV[id.xy].z, 0, 0, 1);
+}
