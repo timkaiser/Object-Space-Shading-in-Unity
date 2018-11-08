@@ -224,7 +224,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 935145188}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36361ad69b708864aaf77442a4da74c8, type: 3}
   m_Name: 
@@ -282,7 +282,7 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1817465291}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 1930457899}
   - component: {fileID: 1930457902}
   - component: {fileID: 1930457903}
+  - component: {fileID: 1930457904}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -445,4 +446,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rt: 1
-  test: {fileID: 0}
+  rts: []
+  results: {fileID: 8400000, guid: 5133251327332344e965245d298c6602, type: 2}
+--- !u!114 &1930457904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1930457898}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74cab9b692cb29c4c88f4316891a6903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rt: 0
+  rts: []
+  results: {fileID: 0}

@@ -40,10 +40,10 @@
 
 			//Output of fragment shader
 			struct fragOut {
-				float2 uv : SV_Target0;
-				float3 worldPos : SV_Target1;
-				float3 normal : SV_Target2;
-				float id : SV_Target3;
+				float4 uv : SV_Target0;
+				float4 worldPos : SV_Target1;
+				float4 normal : SV_Target2;
+				int id : SV_Target3;
 			};
 			/*===============================================================================================
 				SHADER
@@ -67,10 +67,10 @@
 			fragOut frag(v2f i)
 			{
 				fragOut o;
-				o.id = _ID/256.0f;
-				o.uv = i.uv;
-				o.worldPos = i.worldPos;
-				o.normal = i.normal;
+				o.id = _ID;
+				o.uv = float4(i.uv,0,1);
+				o.worldPos = float4(i.worldPos,1);
+				o.normal = float4(i.normal,1);
 				return o;
 			}
 			ENDCG

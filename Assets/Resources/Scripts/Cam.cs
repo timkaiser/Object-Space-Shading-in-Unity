@@ -26,26 +26,28 @@ public class Cam : MonoBehaviour {
     private ComputeShader debugCS;
     private int CSkernel;
 
-    public RenderTexture test;
+    public RenderTexture results;
 
 
     void Start() {
 
         this.sourceCamera = this.GetComponent<Camera>();
 
-        /*this.rts = new RenderTexture[4] {
+        /** /
+        this.rts = new RenderTexture[3] {
             new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.Default), //ID
             new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.Default), //UV
             new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.Default), //World Position
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.Default), //Normal
-
-            */
-        this.rts = new RenderTexture[4] {
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.RG16), //UV
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.ARGBFloat), //World Position
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.ARGB32), //Normal
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.RInt), //ID
+           // new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 0, RenderTextureFormat.Default), //Normal
         };
+            /**/
+        /**/
+        this.rts = new RenderTexture[4] {
+            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.RG16), //UV
+            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.ARGBFloat), //World Position
+            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.ARGB32), //Normal
+            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.RInt), //ID
+        }; /**/
 
         rts[0].Create();
         rts[1].Create();
@@ -54,36 +56,39 @@ public class Cam : MonoBehaviour {
 
 
 
-        this.colorBuffers = new RenderBuffer[4] { rts[0].colorBuffer, rts[1].colorBuffer, rts[2].colorBuffer , rts[3].colorBuffer};
+        this.colorBuffers = new RenderBuffer[4] { rts[0].colorBuffer, rts[1].colorBuffer, rts[2].colorBuffer, rts[3].colorBuffer};
 
         this.depthBuffer = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.Depth);
         this.depthBuffer.Create();
 
         //compute shader
-        test = new RenderTexture(512, 512, 24);
-        test.enableRandomWrite = true;
-        test.Create();
+        results = new RenderTexture(512, 512, 24);
+        results.enableRandomWrite = true;
+        results.Create();
 
         debugCS = (ComputeShader)Instantiate(Resources.Load("Shader/DebugCS"));
         CSkernel = debugCS.FindKernel("DebugCS");
 
-        debugCS.SetTexture(CSkernel, "Result", test);
-        debugCS.SetTexture(CSkernel, "ID", rts[(int)RT.ID]);
+        debugCS.SetTexture(CSkernel, "Result", results);
         debugCS.SetTexture(CSkernel, "UV", rts[(int)RT.UV]);
         debugCS.SetTexture(CSkernel, "WorldPos", rts[(int)RT.WorldPosition]);
         debugCS.SetTexture(CSkernel, "Normal", rts[(int)RT.Normal]);
+        debugCS.SetTexture(CSkernel, "ID", rts[(int)RT.ID]);
 
 
     }
 
     void OnRenderImage(RenderTexture source, RenderTexture destination) {
         sourceCamera.SetTargetBuffers(this.colorBuffers, this.depthBuffer.depthBuffer);
-
-
-        debugCS.Dispatch(CSkernel, test.width / 8, test.height / 8, 1);
+        
+        debugCS.Dispatch(CSkernel, results.width / 8, results.height / 8, 1);
 
         Graphics.Blit(rts[rt.GetHashCode()], destination);
 
+
+    }
+
+    private void OnPostRender() {
 
     }
 
