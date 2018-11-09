@@ -62,7 +62,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _ID: 2
+    - _ID: 250
     - _IsCube: 0
     - _Metallic: 0
     - _Mode: 0

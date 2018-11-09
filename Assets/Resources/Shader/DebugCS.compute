@@ -15,9 +15,10 @@ void DebugCS(uint3 id : SV_DispatchThreadID)
 	float x = 512.0f * UV[id.xy].x;
 	float y = 512.0f * UV[id.xy].y;
 
-	//Result[int2(x,y)] = float4(1,0,0, 1);//float4((ID[id.xy]!=0)?1:0 ,0, 0, 1);
+	Result[int2(x,y)] = float4(WorldPos[id.xy], 1);
+	//Result[id.xy] = (ID[id.xy] != 0) ? float4(ID[id.xy]/256.0f, 1 - ID[id.xy] / 256.0f, 0, 1) : float4(0, 0, 0, 1);
 	//Result[id.xy] = float4((ID[id.xy] != 0) ? 1 : 0, 0, 0, 1);
 	//Result[int2(ID[id.xy].x,0)] = float4(1, 0, 0, 1);
 	//Result[id.xy] = UV[id.xy];
-	Result[id.xy] = float4(UV[id.xy].xy,0,1);
+	//Result[id.xy] = float4(WorldPos[id.xy].xy,0,1);
 }
