@@ -62,15 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Resources\Scripts\Cam.cs" />
-    <Compile Include="Assets\Resources\Scripts\Cam2.cs" />
-    <Compile Include="Assets\Resources\Scripts\RenderBufferScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\OnObjectCreation.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotation.cs" />
     <None Include="Assets\Resources\Shader\DebugCS.compute" />
-    <None Include="Assets\Resources\Shader\Cube.shader" />
     <None Include="Assets\Resources\Textures\Credits.txt" />
     <None Include="Assets\Resources\Shader\CombinedShader.shader" />
     <None Include="Assets\Resources\Shader\IDShader.shader" />
-    <None Include="Assets\Resources\Shader\test.compute" />
     <None Include="Assets\Resources\Shader\UVShader.shader" />
     <None Include="Assets\Resources\Shader\NormalShader.shader" />
     <None Include="Assets\Resources\Shader\WorldPosShader.shader" />

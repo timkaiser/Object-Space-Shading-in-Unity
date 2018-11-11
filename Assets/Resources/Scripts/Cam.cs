@@ -6,6 +6,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class Cam : MonoBehaviour {
+    //object parameterst
+    [SerializeField]
+    private static int currentUnusedIndex = 1;
+    [SerializeField]
+    private static List<int> textureDimensions = new List<int>();
+
+    public const int maxTextureSize = 2048;
 
     //Enum to make switch between aktive RenderTargets in Inspector easier
     public enum RT {
@@ -27,6 +34,8 @@ public class Cam : MonoBehaviour {
     private RenderBuffer[] colorBuffers;    //ColorBuffers of the RenderTextures
     private RenderTexture depthBuffer;      //DepthBuffer for the Camera
 
+    //debug for cs output
+    public RenderTexture[] CSoutputCopy;
 
     //compute shader for mapping the normal/world position to a texture atlas
     private ComputeShader debugCS;
@@ -34,6 +43,7 @@ public class Cam : MonoBehaviour {
 
     //Result of the mapping of normal/world position to a texture atlas
     public RenderTexture results;
+
 
 
     //Called on start
@@ -71,21 +81,43 @@ public class Cam : MonoBehaviour {
         this.depthBuffer.Create();
 
         //create render texture as output for the compute shader
-        results = new RenderTexture(512, 512, 24);
+        results = new RenderTexture(maxTextureSize, maxTextureSize, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+        results.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
         results.enableRandomWrite = true;
+        results.volumeDepth = 3;
         results.Create();
 
-        //load compute shader
-        debugCS = (ComputeShader)Instantiate(Resources.Load("Shader/DebugCS"));
-        CSkernel = debugCS.FindKernel("DebugCS");     
+        /*finalImage = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.Default);
+        finalImage.enableRandomWrite = true;
+        finalImage.Create();
+        */
 
+        //debug for cs output
+        CSoutputCopy = new RenderTexture[3];
+        for(int i=0; i<CSoutputCopy.Length; i++) {
+            CSoutputCopy[i] = new RenderTexture(maxTextureSize, maxTextureSize, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+            CSoutputCopy[i].Create();
+        }
+
+
+
+        //load compute shader
+        int[] texDimArray = textureDimensions.ToArray();
+
+        ComputeBuffer texDimBuffer = new ComputeBuffer(texDimArray.Length, sizeof(int));
+        texDimBuffer.SetData(texDimArray);
+
+
+        debugCS = (ComputeShader)Instantiate(Resources.Load("Shader/DebugCS"));
+        CSkernel = debugCS.FindKernel("DebugCS");
         //set parameters for compute shader
-        debugCS.SetTexture(CSkernel, "Result", results);
+        debugCS.SetTexture(CSkernel, "Output", results);
         debugCS.SetTexture(CSkernel, "ID", rtsCopy[(int)RT.ID]);
         debugCS.SetTexture(CSkernel, "UV", rtsCopy[(int)RT.UV]);
         debugCS.SetTexture(CSkernel, "WorldPos", rtsCopy[(int)RT.WorldPosition]);
         debugCS.SetTexture(CSkernel, "Normal", rtsCopy[(int)RT.Normal]);
-
+        debugCS.SetBuffer (CSkernel, "TextureDimensions", texDimBuffer);
+        //debugCS.SetTexture(CSkernel, "FinalImage", finalImage);
 
     }
 
@@ -102,9 +134,23 @@ public class Cam : MonoBehaviour {
         for (int i = 0; i < rts.Length; i++) {
             Graphics.CopyTexture(rts[i], rtsCopy[i]);
         }
+        //empty result image
+        results.Release();
+        results = new RenderTexture(maxTextureSize, maxTextureSize, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+        results.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
+        results.enableRandomWrite = true;
+        results.volumeDepth = 3;
+        results.Create();
+        debugCS.SetTexture(CSkernel, "Output", results);
+
 
         //Call compute shader
-        debugCS.Dispatch(CSkernel, results.width / 8, results.height / 8, 1);
+        debugCS.Dispatch(CSkernel, sourceCamera.pixelWidth / 8, sourceCamera.pixelHeight/ 8, 1);
+
+        //debug for cs output
+        for (int i = 0; i < CSoutputCopy.Length; i++) {
+            Graphics.CopyTexture(results,i,0, CSoutputCopy[i],0,0);
+        }
     }
 
 
@@ -115,6 +161,13 @@ public class Cam : MonoBehaviour {
         rts[3].Release();
 
         depthBuffer.Release();
+    }
+
+    //returns current unused ID an increments it
+    public static int getNewId(int textureWidth,int textureHeight) {
+        textureDimensions.Add(textureWidth);
+        textureDimensions.Add(textureHeight);
+        return currentUnusedIndex++;
     }
 }
 

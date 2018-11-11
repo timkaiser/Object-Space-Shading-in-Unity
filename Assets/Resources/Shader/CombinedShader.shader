@@ -9,7 +9,7 @@
 	{
 		Tags { "RenderType" = "Opaque" }
 		LOD 100
-
+			
 		Pass
 		{
 			CGPROGRAM
@@ -41,9 +41,9 @@
 			//Output of fragment shader
 			struct fragOut {
 				int id : SV_Target0;
-				float4 uv : SV_Target1;
-				float4 worldPos : SV_Target2;
-				float4 normal : SV_Target3;
+				float2 uv : SV_Target1;
+				float3 worldPos : SV_Target2;
+				float3 normal : SV_Target3;
 			};
 			/*===============================================================================================
 				SHADER
@@ -68,9 +68,9 @@
 			{
 				fragOut o;
 				o.id = _ID;
-				o.uv = float4(i.uv,0,1);
-				o.worldPos = float4(i.worldPos,1);
-				o.normal = float4(i.normal,1);
+				o.uv = i.uv;
+				o.worldPos = i.worldPos;
+				o.normal = i.normal;
 				return o;
 			}
 			ENDCG
