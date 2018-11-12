@@ -6,11 +6,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class Cam : MonoBehaviour {
-    //object parameterst
+    //object parameters
     [SerializeField]
     private static int currentUnusedIndex = 1;
     [SerializeField]
     private static List<int> textureDimensions = new List<int>();
+
+    private static List<GameObject> gameObjects = new List<GameObject>();
 
     public const int maxTextureSize = 2048;
 
@@ -41,7 +43,7 @@ public class Cam : MonoBehaviour {
     private ComputeShader debugCS;
     private int CSkernel;
 
-    //Result of the mapping of normal/world position to a texture atlas
+    //Result of the mapping of normal/world position to a texture array
     public RenderTexture results;
 
 
@@ -124,10 +126,10 @@ public class Cam : MonoBehaviour {
     //Called while image is rendered (?)
     void OnRenderImage(RenderTexture source, RenderTexture destination) {
         sourceCamera.SetTargetBuffers(this.colorBuffers, this.depthBuffer.depthBuffer);
-        
-        Graphics.Blit(rts[rt.GetHashCode()], destination);
-    }
 
+        Graphics.Blit(rts[rt.GetHashCode()], destination);
+       
+    }
     //Called after Image is rendered
     private void OnPostRender() {
         //Copy RenderTextures to other array (to prevent a bug)
@@ -142,7 +144,7 @@ public class Cam : MonoBehaviour {
         results.volumeDepth = 3;
         results.Create();
         debugCS.SetTexture(CSkernel, "Output", results);
-
+        
 
         //Call compute shader
         debugCS.Dispatch(CSkernel, sourceCamera.pixelWidth / 8, sourceCamera.pixelHeight/ 8, 1);
@@ -164,10 +166,16 @@ public class Cam : MonoBehaviour {
     }
 
     //returns current unused ID an increments it
-    public static int getNewId(int textureWidth,int textureHeight) {
+    public static int getNewId(GameObject o, int textureWidth,int textureHeight) {
         textureDimensions.Add(textureWidth);
         textureDimensions.Add(textureHeight);
+        gameObjects.Add(o);
         return currentUnusedIndex++;
+    }
+
+    public int approximateSizeOnScreen(GameObject o) {
+        Vector3 screenSize = sourceCamera.WorldToScreenPoint(GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().bounds.max) - sourceCamera.WorldToScreenPoint(GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().bounds.min);
+        return (int)screenSize.magnitude;
     }
 }
 

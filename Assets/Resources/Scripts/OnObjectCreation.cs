@@ -8,6 +8,7 @@ public class OnObjectCreation : MonoBehaviour {
 	void Awake () {
         this.GetComponent<Renderer>().material.SetInt("_ID", 
             Cam.getNewId(
+                this.gameObject,
                 this.GetComponent<Renderer>().material.mainTexture.width,
                 this.GetComponent<Renderer>().material.mainTexture.height
             )
