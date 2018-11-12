@@ -16,8 +16,13 @@ StructuredBuffer<int> TextureDimensions;
 [numthreads(8,8,1)]
 void DebugCS(uint3 id : SV_DispatchThreadID)
 {
-	float x = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2] * UV[id.xy].x;
+	/*float x = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2] * UV[id.xy].x;
 	float y = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2 + 1] * UV[id.xy].y;
+	*/
+
+	float x = 1.0f* TextureDimensions[(ID[id.xy] - 1)] * UV[id.xy].x;
+	float y = 1.0f* TextureDimensions[(ID[id.xy] - 1)] * UV[id.xy].y;
+
 
 	if(ID[id.xy]!=0)
 		Output[int3(x,y, ID[id.xy]-1)] = float4(Normal[id.xy], 1);

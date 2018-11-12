@@ -14,7 +14,7 @@ public class Cam : MonoBehaviour {
 
     private static List<GameObject> gameObjects = new List<GameObject>();
 
-    public const int maxTextureSize = 2048;
+    public const int maxTextureSize = 512;
 
     //Enum to make switch between aktive RenderTargets in Inspector easier
     public enum RT {
@@ -35,6 +35,7 @@ public class Cam : MonoBehaviour {
     private RenderTexture[] rtsCopy;        //Copies of the RenderTextures (needed because of some bugs with the original textures)
     private RenderBuffer[] colorBuffers;    //ColorBuffers of the RenderTextures
     private RenderTexture depthBuffer;      //DepthBuffer for the Camera
+    private ComputeBuffer texDimBuffer;     //ComputeBuffer to give texture sizes to compute shader
 
     //debug for cs output
     public RenderTexture[] CSoutputCopy;
@@ -106,7 +107,7 @@ public class Cam : MonoBehaviour {
         //load compute shader
         int[] texDimArray = textureDimensions.ToArray();
 
-        ComputeBuffer texDimBuffer = new ComputeBuffer(texDimArray.Length, sizeof(int));
+        texDimBuffer = new ComputeBuffer(texDimArray.Length, sizeof(int));
         texDimBuffer.SetData(texDimArray);
 
 
@@ -119,7 +120,6 @@ public class Cam : MonoBehaviour {
         debugCS.SetTexture(CSkernel, "WorldPos", rtsCopy[(int)RT.WorldPosition]);
         debugCS.SetTexture(CSkernel, "Normal", rtsCopy[(int)RT.Normal]);
         debugCS.SetBuffer (CSkernel, "TextureDimensions", texDimBuffer);
-        //debugCS.SetTexture(CSkernel, "FinalImage", finalImage);
 
     }
 
@@ -144,7 +144,13 @@ public class Cam : MonoBehaviour {
         results.volumeDepth = 3;
         results.Create();
         debugCS.SetTexture(CSkernel, "Output", results);
-        
+
+        int[] objectSizesOnScreen = new int[gameObjects.Count];
+        foreach(GameObject obj in gameObjects) {
+            objectSizesOnScreen[obj.GetComponent<OnObjectCreation>().id - 1] = approximateSizeOnScreen(obj);
+        }
+
+        texDimBuffer.SetData(objectSizesOnScreen);
 
         //Call compute shader
         debugCS.Dispatch(CSkernel, sourceCamera.pixelWidth / 8, sourceCamera.pixelHeight/ 8, 1);
