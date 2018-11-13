@@ -4,12 +4,13 @@
 	{
 		_MainTex("Texture", 2D) = "white" {}
 		_ID("ID", Int) = 0
+		_TextureSize("TextureSize", Int) = 512
 	}
 		SubShader
 	{
 		Tags { "RenderType" = "Opaque" }
 		LOD 100
-			
+
 		Pass
 		{
 			CGPROGRAM
@@ -42,7 +43,7 @@
 			struct fragOut {
 				int id : SV_Target0;
 				float2 uv : SV_Target1;
-				float3 worldPos : SV_Target2;
+				float4 worldPos : SV_Target2;
 				float3 normal : SV_Target3;
 			};
 			/*===============================================================================================
@@ -52,6 +53,7 @@
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			int _ID;
+			int _TextureSize;
 
 			v2f vert(appdata v)
 			{
@@ -69,8 +71,14 @@
 				fragOut o;
 				o.id = _ID;
 				o.uv = i.uv;
-				o.worldPos = i.worldPos;
+				o.worldPos.xyz = i.worldPos;
 				o.normal = i.normal;
+
+				float2 dx = ddx (i.uv);
+				float2 dy = ddy (i.uv);
+				float mipLevel = log2 (max (max (dx.x, dx.y), max (dy.x, dy.y)) * _TextureSize);
+				o.worldPos.w = mipLevel;
+
 				return o;
 			}
 			ENDCG

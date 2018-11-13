@@ -3,41 +3,25 @@
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
-//RWTexture2D<float4> Result;
 Texture2D<int> ID;
-Texture2D<float3> WorldPos;
+Texture2D<float4> WorldPos;
 Texture2D<float3> Normal;
 Texture2D<float2> UV;
 RWTexture2DArray<float3> Output;
-//RWTexture2D<float4> FinalImage;
-StructuredBuffer<int> TextureDimensions;
-
 
 [numthreads(8,8,1)]
 void DebugCS(uint3 id : SV_DispatchThreadID)
 {
-	/*float x = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2] * UV[id.xy].x;
-	float y = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2 + 1] * UV[id.xy].y;
-	*/
+    float4 worldPos = WorldPos [id.xy];
+    float3 normal = Normal [id.xy];
+    float2 uv = UV[id.xy];
 
-	float x = 1.0f* TextureDimensions[(ID[id.xy] - 1)] * UV[id.xy].x;
-	float y = 1.0f* TextureDimensions[(ID[id.xy] - 1)] * UV[id.xy].y;
+    uint width, height, elements;
+    Output.GetDimensions (width, height, elements);
 
-
-	if(ID[id.xy]!=0)
-		Output[int3(x,y, ID[id.xy]-1)] = float4(Normal[id.xy], 1);
-	//Result[int2(x,y)] = float4(WorldPos[id.xy], 1);
-	//Result[id.xy] = (ID[id.xy] != 0) ? float4(ID[id.xy]/256.0f, 1 - ID[id.xy] / 256.0f, 0, 1) : float4(0, 0, 0, 1);
-	//Result[id.xy] = float4((ID[id.xy] != 0) ? 1 : 0, 0, 0, 1);
-	//Result[int2(ID[id.xy].x,0)] = float4(1, 0, 0, 1);
-	//Result[id.xy] = UV[id.xy];
-	//Result[id.xy] = float4(WorldPos[id.xy].xy,0,1);
+    int mipLevel = worldPos.w;
+    int widthAtLevel = width >> mipLevel;
+    int heightAtLevel = height >> mipLevel;
+    //
+    Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y,mipLevel)] = normal;
 }
-
-/*void SecondRenderPass(uint3 id : SV_DispatchThreadID)
-{
-	float x = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2] * UV[id.xy].x;
-	float y = 1.0f* TextureDimensions[(ID[id.xy] - 1) * 2 + 1] * UV[id.xy].y;
-
-	FinalImage[id.xy] = (ID[id.xy] != 0) ? float4(Output[int3(x, y, ID[id.xy] - 1)].xyz, 1) : float4(0, 1, 0, 1);
-}*/

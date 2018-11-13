@@ -1,41 +1,7 @@
-Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
+Base path: C:/Program Files/Unity/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(22): implicit truncation of vector type
-  error: 2 plat 4 at DebugCS.compute(23): array, matrix, vector, or indexable object type expected in index expression
-  api=4 insize=1071 outsize=0 ok=0
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(23): implicit truncation of vector type
-  error: 1 plat 4 at DebugCS.compute(24): implicit truncation of vector type
-  api=4 insize=1503 outsize=1161 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  error: 2 plat 4 at DebugCS.compute(17): cannot implicitly convert from 'const float2' to 'float3'
+  api=4 insize=795 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler

@@ -1,88 +1,8 @@
-Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(20): implicit truncation of vector type
-  api=4 insize=954 outsize=553 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(21): implicit truncation of vector type
-  error: 2 plat 4 at DebugCS.compute(22): incorrect number of arguments to numeric-type constructor
-  api=4 insize=1050 outsize=0 ok=0
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(21): implicit truncation of vector type
-  api=4 insize=1056 outsize=721 ok=1
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(21): implicit truncation of vector type
-  error: 1 plat 4 at DebugCS.compute(22): implicit truncation of vector type
-  api=4 insize=1054 outsize=953 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+Base path: C:/Program Files/Unity/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
   error: 1 plat 4 at DebugCS.compute(22): implicit truncation of vector type
-  error: 1 plat 4 at DebugCS.compute(23): implicit truncation of vector type
-  api=4 insize=1061 outsize=977 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  api=4 insize=664 outsize=841 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -90,16 +10,8 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(24): implicit truncation of vector type
-  error: 1 plat 4 at DebugCS.compute(25): implicit truncation of vector type
-  api=4 insize=1544 outsize=1161 ok=1
-Cmd: compileComputeKernel
-  error: 1 plat 4 at DebugCS.compute(23): implicit truncation of vector type
-  error: 1 plat 4 at DebugCS.compute(24): implicit truncation of vector type
-  api=4 insize=1509 outsize=1161 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  error: 2 plat 4 at DebugCS.compute(15): invalid type for index - index must be a scalar, or a vector with the correct number of dimensions
+  api=4 insize=563 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

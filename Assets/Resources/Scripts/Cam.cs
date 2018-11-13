@@ -14,7 +14,8 @@ public class Cam : MonoBehaviour {
 
     private static List<GameObject> gameObjects = new List<GameObject>();
 
-    public const int maxTextureSize = 512;
+    public const int MIP_MAP_COUNT = 9;
+    public const int MAX_TEXTURE_SIZE = 1 << 9;
 
     //Enum to make switch between aktive RenderTargets in Inspector easier
     public enum RT {
@@ -32,10 +33,8 @@ public class Cam : MonoBehaviour {
     //Render Targets the Camera renders to
     [SerializeField]
     private RenderTexture[] rts;            //Render Targets for the camera
-    private RenderTexture[] rtsCopy;        //Copies of the RenderTextures (needed because of some bugs with the original textures)
     private RenderBuffer[] colorBuffers;    //ColorBuffers of the RenderTextures
     private RenderTexture depthBuffer;      //DepthBuffer for the Camera
-    private ComputeBuffer texDimBuffer;     //ComputeBuffer to give texture sizes to compute shader
 
     //debug for cs output
     public RenderTexture[] CSoutputCopy;
@@ -44,83 +43,40 @@ public class Cam : MonoBehaviour {
     private ComputeShader debugCS;
     private int CSkernel;
 
-    //Result of the mapping of normal/world position to a texture array
-    public RenderTexture results;
-
-
-
     //Called on start
     void Start() {
         //get main camera
         this.sourceCamera = this.GetComponent<Camera>();
-        
+
+        int width = sourceCamera.pixelWidth;
+        int height = sourceCamera.pixelHeight;
+
         //Initialize Render Textures
         this.rts = new RenderTexture[4] {
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.RInt), //ID
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.RG16), //UV
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.ARGBFloat), //World Position
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.ARGB32), //Normal
+            new RenderTexture(width, height, 0, RenderTextureFormat.RInt), //ID
+            new RenderTexture(width, height, 0, RenderTextureFormat.RG16), //UV
+            new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat), //World Position
+            new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //Normal
         };
-
-        //Initialize Render Textures
-        this.rtsCopy = new RenderTexture[4] {
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.RInt), //ID
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.RG16), //UV
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.ARGBFloat), //World Position
-            new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.ARGB32), //Normal
-        };
-
-        //Initialize Render Textures
-        for (int i=0; i< rts.Length; i++) {
-            rts[i].Create();
-            rtsCopy[i].Create();
-        }
 
         //get color buffers from rendertextures
         this.colorBuffers = new RenderBuffer[4] { rts[0].colorBuffer, rts[1].colorBuffer, rts[2].colorBuffer, rts[3].colorBuffer};
 
         //create depth buffer
-        this.depthBuffer = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.Depth);
+        this.depthBuffer = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 32, RenderTextureFormat.Depth);
         this.depthBuffer.Create();
 
-        //create render texture as output for the compute shader
-        results = new RenderTexture(maxTextureSize, maxTextureSize, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
-        results.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
-        results.enableRandomWrite = true;
-        results.volumeDepth = 3;
-        results.Create();
-
-        /*finalImage = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 24, RenderTextureFormat.Default);
-        finalImage.enableRandomWrite = true;
-        finalImage.Create();
-        */
 
         //debug for cs output
-        CSoutputCopy = new RenderTexture[3];
-        for(int i=0; i<CSoutputCopy.Length; i++) {
-            CSoutputCopy[i] = new RenderTexture(maxTextureSize, maxTextureSize, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+        CSoutputCopy = new RenderTexture[MIP_MAP_COUNT];
+        for (int i = 0; i < MIP_MAP_COUNT; ++i) {
+            CSoutputCopy[i] = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+            CSoutputCopy[i].filterMode = FilterMode.Point;
             CSoutputCopy[i].Create();
         }
 
-
-
-        //load compute shader
-        int[] texDimArray = textureDimensions.ToArray();
-
-        texDimBuffer = new ComputeBuffer(texDimArray.Length, sizeof(int));
-        texDimBuffer.SetData(texDimArray);
-
-
         debugCS = (ComputeShader)Instantiate(Resources.Load("Shader/DebugCS"));
         CSkernel = debugCS.FindKernel("DebugCS");
-        //set parameters for compute shader
-        debugCS.SetTexture(CSkernel, "Output", results);
-        debugCS.SetTexture(CSkernel, "ID", rtsCopy[(int)RT.ID]);
-        debugCS.SetTexture(CSkernel, "UV", rtsCopy[(int)RT.UV]);
-        debugCS.SetTexture(CSkernel, "WorldPos", rtsCopy[(int)RT.WorldPosition]);
-        debugCS.SetTexture(CSkernel, "Normal", rtsCopy[(int)RT.Normal]);
-        debugCS.SetBuffer (CSkernel, "TextureDimensions", texDimBuffer);
-
     }
 
     //Called while image is rendered (?)
@@ -128,37 +84,39 @@ public class Cam : MonoBehaviour {
         sourceCamera.SetTargetBuffers(this.colorBuffers, this.depthBuffer.depthBuffer);
 
         Graphics.Blit(rts[rt.GetHashCode()], destination);
-       
+
     }
     //Called after Image is rendered
     private void OnPostRender() {
-        //Copy RenderTextures to other array (to prevent a bug)
-        for (int i = 0; i < rts.Length; i++) {
-            Graphics.CopyTexture(rts[i], rtsCopy[i]);
-        }
-        //empty result image
-        results.Release();
-        results = new RenderTexture(maxTextureSize, maxTextureSize, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
-        results.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
-        results.enableRandomWrite = true;
-        results.volumeDepth = 3;
-        results.Create();
-        debugCS.SetTexture(CSkernel, "Output", results);
+        Graphics.SetRenderTarget(null);
+        var result = CreateIntermediateTarget();
 
-        int[] objectSizesOnScreen = new int[gameObjects.Count];
-        foreach(GameObject obj in gameObjects) {
-            objectSizesOnScreen[obj.GetComponent<OnObjectCreation>().id - 1] = approximateSizeOnScreen(obj);
-        }
-
-        texDimBuffer.SetData(objectSizesOnScreen);
+        debugCS.SetTexture(CSkernel, "Output", result);
+        debugCS.SetTexture(CSkernel, "ID", rts[(int)RT.ID]);
+        debugCS.SetTexture(CSkernel, "UV", rts[(int)RT.UV]);
+        debugCS.SetTexture(CSkernel, "WorldPos", rts[(int)RT.WorldPosition]);
+        debugCS.SetTexture(CSkernel, "Normal", rts[(int)RT.Normal]);
 
         //Call compute shader
         debugCS.Dispatch(CSkernel, sourceCamera.pixelWidth / 8, sourceCamera.pixelHeight/ 8, 1);
 
         //debug for cs output
-        for (int i = 0; i < CSoutputCopy.Length; i++) {
-            Graphics.CopyTexture(results,i,0, CSoutputCopy[i],0,0);
+        for (int i = 0; i < MIP_MAP_COUNT; ++i) {
+        Graphics.CopyTexture(result, i, CSoutputCopy[i], 0);
         }
+    }
+
+    RenderTexture CreateIntermediateTarget ()
+    {
+        var result = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+        result.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
+        result.enableRandomWrite = true;
+        result.filterMode = FilterMode.Point;
+        result.anisoLevel = 0;
+        result.volumeDepth = MIP_MAP_COUNT;
+        result.Create();
+
+        return result;
     }
 
 
