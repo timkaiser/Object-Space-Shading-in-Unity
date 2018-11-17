@@ -14,8 +14,8 @@ public class Cam : MonoBehaviour {
 
     private static List<GameObject> gameObjects = new List<GameObject>();
 
-    public const int MIP_MAP_COUNT = 9;
-    public const int MAX_TEXTURE_SIZE = 1 << 9;
+    public const int MIP_MAP_COUNT = 11;
+    public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
 
     //Enum to make switch between aktive RenderTargets in Inspector easier
     public enum RT {
@@ -104,6 +104,8 @@ public class Cam : MonoBehaviour {
         for (int i = 0; i < MIP_MAP_COUNT; ++i) {
         Graphics.CopyTexture(result, i, CSoutputCopy[i], 0);
         }
+
+        result.Release();
     }
 
     RenderTexture CreateIntermediateTarget ()

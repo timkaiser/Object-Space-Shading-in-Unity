@@ -277,7 +277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &1817465292
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -461,4 +461,3 @@ MonoBehaviour:
   rt: 1
   rts: []
   CSoutputCopy: []
-  results: {fileID: 8400000, guid: 5133251327332344e965245d298c6602, type: 2}

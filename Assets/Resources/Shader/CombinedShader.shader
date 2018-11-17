@@ -41,8 +41,8 @@
 
 			//Output of fragment shader
 			struct fragOut {
-				int id : SV_Target0;
-				float2 uv : SV_Target1;
+				int id : SV_Target1;
+				float2 uv : SV_Target0;
 				float4 worldPos : SV_Target2;
 				float3 normal : SV_Target3;
 			};
