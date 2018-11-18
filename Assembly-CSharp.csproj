@@ -66,14 +66,10 @@
     <Compile Include="Assets\Resources\Scripts\Cam.cs" />
     <Compile Include="Assets\Resources\Scripts\OnObjectCreation.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotation.cs" />
+    <Compile Include="Assets\Resources\Scripts\Test.cs" />
     <None Include="Assets\Resources\Shader\DebugCS.compute" />
-    <None Include="Assets\RenderPipeline\Shader\Unlit.shader" />
     <None Include="Assets\Resources\Textures\Credits.txt" />
     <None Include="Assets\Resources\Shader\CombinedShader.shader" />
-    <None Include="Assets\Resources\Shader\IDShader.shader" />
-    <None Include="Assets\Resources\Shader\UVShader.shader" />
-    <None Include="Assets\Resources\Shader\NormalShader.shader" />
-    <None Include="Assets\Resources\Shader\WorldPosShader.shader" />
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>

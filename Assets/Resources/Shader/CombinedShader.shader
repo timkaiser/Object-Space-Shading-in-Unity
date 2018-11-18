@@ -5,19 +5,18 @@
 		_MainTex("Texture", 2D) = "white" {}
 		_ID("ID", Int) = 0
 		_TextureSize("TextureSize", Int) = 512
+		_SecondaryTexture("Texture2", 2D) = "white" {}
 	}
 		SubShader
 	{
-		Tags { "RenderType" = "Opaque" }
-		LOD 100
-
-		Pass
+		
+		Pass //First Pass
 		{
+			Name  "FIRSTPASS"
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			// make fog work
-			#pragma multi_compile_fog
 
 			#include "UnityCG.cginc"
 			/*===============================================================================================
@@ -41,8 +40,8 @@
 
 			//Output of fragment shader
 			struct fragOut {
-				int id : SV_Target1;
-				float2 uv : SV_Target0;
+				int id : SV_Target0;
+				float2 uv : SV_Target1;
 				float4 worldPos : SV_Target2;
 				float3 normal : SV_Target3;
 			};
@@ -83,5 +82,61 @@
 			}
 			ENDCG
 		}
+
+		Pass //Second Pass
+		{
+			Name  "Second Pass"
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+
+				#include "UnityCG.cginc"
+				/*===============================================================================================
+					INPUT / OUTPUT STRUCTS
+				  ===============================================================================================*/
+
+				struct appdata
+				{
+					float4 vertex : POSITION;
+					float2 uv : TEXCOORD0;
+				};
+
+				struct v2f
+				{
+					float2 uv : TEXCOORD0;
+					float4 vertex : SV_POSITION;
+				};
+
+				/*===============================================================================================
+					SHADER
+				  ===============================================================================================*/
+
+				sampler2D _SecondaryTexture;
+				int _ID;
+				int _TextureSize;
+
+				v2f vert(appdata v)
+				{
+					v2f o;
+					o.vertex = UnityObjectToClipPos(v.vertex);
+					//o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+
+					return o;
+				};
+
+				fixed4 frag(v2f i): SV_Target
+				{
+					/*float2 dx = ddx(i.uv);
+					float2 dy = ddy(i.uv);
+					float mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+
+					fixed4 col = tex2D(_MainTex, i.uv);
+
+					return col;
+					*/ return fixed4(1, 0, 0, 1);
+				}
+				ENDCG
+			}
 	}
 }
