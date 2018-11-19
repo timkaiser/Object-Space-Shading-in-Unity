@@ -462,6 +462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rts: []
   CSoutputCopy: []
+  mainImage: {fileID: 0}
 --- !u!4 &2115577092
 Transform:
   m_ObjectHideFlags: 0

@@ -6,11 +6,12 @@ public class Test : MonoBehaviour {
     #if DEBUG
     public RenderTexture[] rts;
     public RenderTexture[] CSoutputCopy;
+    public RenderTexture mainImage;
 
     private void Update() {
-        rts = MyPipline.rts;
-        CSoutputCopy = MyPipline.CSoutputCopy;
-
+        rts = MyPipeline.rts;
+        CSoutputCopy = MyPipeline.CSoutputCopy;
+        mainImage = MyPipeline.mainImage;
 
     }
 

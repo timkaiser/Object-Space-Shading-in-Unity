@@ -22,6 +22,6 @@ void DebugCS(uint3 id : SV_DispatchThreadID)
     int mipLevel = worldPos.w;
     int widthAtLevel = width >> mipLevel;
     int heightAtLevel = height >> mipLevel;
-    //
+    
     Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y,mipLevel)] = normal;
 }
