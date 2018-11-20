@@ -32,7 +32,7 @@ public class MyPipeline : RenderPipeline {
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
 
     //compute shader for mapping the normal/world position to a texture atlas
-    private ComputeShader debugCS;
+    private ComputeShader computeShader;
     private int CSkernel;
 
     //### Constructor ##############################################################################################################
@@ -63,8 +63,8 @@ public class MyPipeline : RenderPipeline {
         depthBuffer = depthBufferTexture.depthBuffer;
 
         //compute shader
-        debugCS = (ComputeShader)(Resources.Load("Shader/DebugCS"));
-        CSkernel = debugCS.FindKernel("DebugCS");
+        computeShader = (ComputeShader)Resources.Load("Shader/DebugCS"); //ComputeShader DebugCS
+        CSkernel = computeShader.FindKernel("CSMain");
         
         #if DEBUG
         //debug for cs output
@@ -150,16 +150,12 @@ public class MyPipeline : RenderPipeline {
 
         var result = runComputeShader(camera.pixelWidth,camera.pixelHeight);
 
-        #region Second Pass
-        //Second Shader Pass
-        //set render target
-        //Graphics.SetRenderTarget(mainImage);
-        //camera.SetReplacementShader(Shader.Find("Custom/SecondPass"), "");
+        #region Read-Back
 
         cameraBuffer.Clear();
 
-        Shader secondPass = Shader.Find("Custom/SecondPass");
-        Material secondPassMaterial = new Material(secondPass);
+        Shader readBack = Shader.Find("Custom/ReadBack");
+        Material secondPassMaterial = new Material(readBack);
         secondPassMaterial.SetTexture("_TextureArray", result);
 
 
@@ -204,14 +200,14 @@ public class MyPipeline : RenderPipeline {
         Graphics.SetRenderTarget(null);
         var result = CreateIntermediateCSTarget();
 
-        debugCS.SetTexture(CSkernel, "Output", result);
-        debugCS.SetTexture(CSkernel, "ID", rts[0]);
-        debugCS.SetTexture(CSkernel, "UV", rts[1]);
-        debugCS.SetTexture(CSkernel, "WorldPos", rts[2]);
-        debugCS.SetTexture(CSkernel, "Normal", rts[3]);
+        computeShader.SetTexture(CSkernel, "Output", result);
+        computeShader.SetTexture(CSkernel, "ID", rts[0]);
+        computeShader.SetTexture(CSkernel, "UV", rts[1]);
+        computeShader.SetTexture(CSkernel, "WorldPos", rts[2]);
+        computeShader.SetTexture(CSkernel, "Normal", rts[3]);
 
         //Call compute shader
-        debugCS.Dispatch(CSkernel, width / 8, height / 8, 1);
+        computeShader.Dispatch(CSkernel, width / 8, height / 8, 1);
 
         #if DEBUG
         //debug for cs output

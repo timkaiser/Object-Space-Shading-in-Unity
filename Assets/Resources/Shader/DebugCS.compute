@@ -1,5 +1,5 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel DebugCS
+#pragma kernel CSMain
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -10,18 +10,19 @@ Texture2D<float2> UV;
 RWTexture2DArray<float3> Output;
 
 [numthreads(8,8,1)]
-void DebugCS(uint3 id : SV_DispatchThreadID)
+void CSMain(uint3 id : SV_DispatchThreadID)
 {
-    float4 worldPos = WorldPos [id.xy];
-    float3 normal = Normal [id.xy];
-    float2 uv = UV[id.xy];
+    float3 tex = Normal [id.xy];
+	float4 worldPos = WorldPos[id.xy];
+	float2 uv = UV[id.xy];
 
     uint width, height, elements;
     Output.GetDimensions (width, height, elements);
-
-    int mipLevel = worldPos.w;
-    int widthAtLevel = width >> mipLevel;
-    int heightAtLevel = height >> mipLevel;
     
-    Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y,mipLevel)] = normal;
+	for (int j = 0; j < 9; j++) {
+		int mipLevel = worldPos.w;
+		int widthAtLevel = width >> j;
+		int heightAtLevel = height >> j;
+		Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y, j)] = tex;
+	}
 }
