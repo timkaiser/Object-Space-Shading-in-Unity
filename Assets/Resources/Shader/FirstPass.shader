@@ -76,6 +76,7 @@
 					float mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
 					o.worldPos.w = mipLevel;
 
+					//o.uv = float2(mipLevel / 10, 0);
 					return o;
 				}
 				ENDCG

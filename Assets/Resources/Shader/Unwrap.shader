@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-//source: https://forum.unity.com/threads/unwrapping-mesh-geometry-in-a-shader.125455/
+﻿//source: https://forum.unity.com/threads/unwrapping-mesh-geometry-in-a-shader.125455/
 Shader "Custom/Unwrap" {
 	SubShader{
 	Tags{ "RenderType" = "Opaque" }
@@ -24,20 +22,22 @@ Shader "Custom/Unwrap" {
 			{
 				float4  pos : SV_POSITION;
 				float2 uv : TEXCOORD0;
+				float2 screenSpace : TEXCOORD1;
 			};
 
 			v2f vert(appdata v)
 			{
 				v2f o;
-				v.vertex = float4(v.uv.xy, 0.0, 1.0);
+				v.vertex = float4(v.uv.xy, 0.0, 1.0)*4-2;
 				o.pos = UnityObjectToClipPos(v.vertex);
+				o.screenSpace = ComputeScreenPos(UnityObjectToClipPos(v.vertex));
 				o.uv = v.uv;
 				return o;
 			}
 
 			float4 frag(v2f i) : COLOR
 			{
-				return float4(i.uv,0,1);
+				return float4(i.screenSpace.x < 1 ? i.screenSpace.x : 0,i.screenSpace.y < 1 ? i.screenSpace.y : 0 ,0,1);
 			}
 		ENDCG
 	}

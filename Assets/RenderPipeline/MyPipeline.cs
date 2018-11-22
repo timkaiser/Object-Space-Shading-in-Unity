@@ -44,15 +44,23 @@ public class MyPipeline : RenderPipeline {
 
         //Initilize RenderTexture for final image
         mainImage = new RenderTexture(width, height, 24, RenderTextureFormat.Default);
-
+        mainImage.filterMode = FilterMode.Point;
+        mainImage.anisoLevel = 0;
+        mainImage.Create();
 
         //Initialize Render Textures
         rts = new RenderTexture[4] {
             new RenderTexture(width, height, 0, RenderTextureFormat.RInt), //ID
-            new RenderTexture(width, height, 0, RenderTextureFormat.RG16), //UV
+            new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat), //UV
             new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat), //World Position
             new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //Normal
         };
+
+        for (int i = 0; i < rts.Length; i++) {
+            rts[i].filterMode = FilterMode.Point;
+            rts[i].anisoLevel = 0;
+            rts[i].Create();
+        }
 
         //get color buffers from rendertextures
         colorBuffers = new RenderBuffer[4] { rts[0].colorBuffer, rts[1].colorBuffer, rts[2].colorBuffer, rts[3].colorBuffer };
@@ -63,7 +71,7 @@ public class MyPipeline : RenderPipeline {
         depthBuffer = depthBufferTexture.depthBuffer;
 
         //compute shader
-        computeShader = (ComputeShader)Resources.Load("Shader/DebugCS"); //ComputeShader DebugCS
+        computeShader = (ComputeShader)Resources.Load("Shader/ComputeShader"); //ComputeShader DebugCS
         CSkernel = computeShader.FindKernel("CSMain");
         
         #if DEBUG
@@ -128,7 +136,7 @@ public class MyPipeline : RenderPipeline {
         #region drawing
         //set render target
         camera.SetTargetBuffers(colorBuffers, depthBuffer);
-
+        //camera.SetTargetBuffers(mainImage.colorBuffer,mainImage.depthBuffer);
         //setup settings for rendering unlit opaque materials
         var drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
         drawSettings.sorting.flags = SortFlags.CommonOpaque;
@@ -139,17 +147,17 @@ public class MyPipeline : RenderPipeline {
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
         
         //reset Render Target
-        Graphics.SetRenderTarget(null);
+        //Graphics.SetRenderTarget(null);
         #endregion
 
         cameraBuffer.EndSample("Camera Render");
-        
 
         context.Submit();
         #endregion
 
+        //Graphics.Blit(mainImage,RenderTexture.active);
         var result = runComputeShader(camera.pixelWidth,camera.pixelHeight);
-
+        
         #region Read-Back
 
         cameraBuffer.Clear();
@@ -191,7 +199,7 @@ public class MyPipeline : RenderPipeline {
         context.Submit();
         result.Release();
         #endregion
-
+    
     }
 
     //### other methodes #############################################################################################################
