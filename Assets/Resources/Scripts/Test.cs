@@ -6,13 +6,15 @@ public class Test : MonoBehaviour {
     #if DEBUG
     public RenderTexture[] rts;
     public RenderTexture[] CSoutputCopy;
-    public RenderTexture mainImage;
+
+    public RenderTexture baycentricCoords;
+    public RenderTexture vertexIds;
 
     private void Update() {
         rts = MyPipeline.rts;
         CSoutputCopy = MyPipeline.CSoutputCopy;
-        mainImage = MyPipeline.mainImage;
-
+        baycentricCoords = MyPipeline.baycentricCoords;
+        vertexIds = MyPipeline.vertexIds;
     }
 
     #endif

@@ -46,7 +46,7 @@
 			}
 
 
-			fixed4 frag(v2f i) : SV_Target
+			float4 frag(v2f i) : SV_Target
 			{
 				//return fixed4(1,0,0,1);
 				/*float2 dx = ddx(i.uv);
@@ -61,11 +61,15 @@
 
 
 				
-				fixed4 result = fixed4(0,0,0,1);
+				float4 result = float4(0,0,0,0);
 				
 				for (int j = 0; j < 9; j++) {
 					int p = pow(2, j);
-					result = (result == fixed4(0,0,0,1))? UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(i.uv / p, j)) : result;
+					result = ((int)(result.r * 1000) == 0 
+						&& (int)(result.g * 1000) == 0
+						&& (int)(result.b * 1000) == 0
+						&& (int)(result.a * 1000) == 0)? 
+						UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(i.uv / p, j)) : result;
 				}
 
 				return result;

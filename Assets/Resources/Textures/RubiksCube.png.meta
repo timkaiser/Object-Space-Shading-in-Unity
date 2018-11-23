@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 23201284729dd2942b37ac65da1129b9
+guid: 0adb1e3bc62a46d4f89039c31525a855
 TextureImporter:
-  fileIDToRecycleName:
-    8900000: generatedCubemap
+  fileIDToRecycleName: {}
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -38,7 +37,7 @@ TextureImporter:
     wrapU: -1
     wrapV: -1
     wrapW: -1
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
   spriteMode: 0

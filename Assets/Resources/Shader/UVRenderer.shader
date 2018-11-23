@@ -2,7 +2,6 @@
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -32,7 +31,6 @@
 				float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
 				uint vertexId : TEXCOORD1;
-				float3 color: COLOR0;
 			};
 
 
@@ -51,16 +49,14 @@
 			};
 
 			// Shader =================================================================
-			sampler2D _MainTex;
-			float4 _MainTex_ST;
 			
 			v2g vert (appdata v)
 			{
 				v2g o;
-				v.vertex = float4(v.uv.xy-float2(0.5,-0.5), 0.0, 1.0);	
+				v.vertex = float4(v.uv.xy-float2(0.5,-0.5), 0, 1.0);	
 				v.vertex = mul(UNITY_MATRIX_V, v.vertex);
 				v.vertex = mul(UNITY_MATRIX_P, v.vertex);
-				o.vertex = float4(v.vertex.xyz, 0.8671875); //HOW CAN I AVOID THIS SCALE FACTOR?
+				o.vertex = float4(v.vertex.xyz, (442.0/512.0)); //HOW CAN I AVOID THIS SCALE FACTOR?
 				o.uv = v.uv;
 				o.vertexId = v.vertexId;
 				return o;

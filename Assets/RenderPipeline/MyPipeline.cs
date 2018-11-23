@@ -16,13 +16,14 @@ public class MyPipeline : RenderPipeline {
     #if DEBUG
     public static RenderTexture[] CSoutputCopy; 
     public static RenderTexture[] rts;
-    //Texture for final image
-    public static RenderTexture mainImage;
-#else
-    RenderTexture[] rts;
-    //Texture for final image
-    RenderTexture mainImage;
-#endif
+    public static RenderTexture baycentricCoords;
+    public static RenderTexture vertexIds;
+
+    #else
+    RenderTexture[] rts;    
+    public static RenderTexture baycentricCoords;
+    public static RenderTexture vertexIds;
+    #endif
 
 
     RenderBuffer[] colorBuffers;
@@ -42,16 +43,10 @@ public class MyPipeline : RenderPipeline {
         int width = cam.pixelWidth;
         int height = cam.pixelHeight;
 
-        //Initilize RenderTexture for final image
-        mainImage = new RenderTexture(width, height, 24, RenderTextureFormat.Default);
-        mainImage.filterMode = FilterMode.Point;
-        mainImage.anisoLevel = 0;
-        mainImage.Create();
-
         //Initialize Render Textures
         rts = new RenderTexture[4] {
             new RenderTexture(width, height, 0, RenderTextureFormat.RInt), //ID
-            new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat), //UV
+            new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat), //UV
             new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat), //World Position
             new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //Normal
         };
@@ -99,11 +94,13 @@ public class MyPipeline : RenderPipeline {
 
     //called once for every camera
     public void Render(ScriptableRenderContext context, Camera camera) {
-        #region First Pass
+       
+        #region Setup
+        DrawRendererSettings drawSettings;
+        FilterRenderersSettings filterSettings;
 
-        //sample call for frame debugger
-        cameraBuffer.BeginSample("Camera Render");
-        //basic rendering stuff =================================================
+        //setup camera
+        context.SetupCameraProperties(camera);
 
         //cull objects not on screen
         #region culling
@@ -115,8 +112,70 @@ public class MyPipeline : RenderPipeline {
         CullResults.Cull(ref cullingParameters, context, ref cull);
         #endregion
 
-        //setup cmaera
-        context.SetupCameraProperties(camera);
+        #endregion
+
+        #region UV Renderer
+        cameraBuffer.BeginSample("UV Renderer");
+
+        if (baycentricCoords == null || vertexIds == null) {
+            //Initilize RenderTexture for final image
+            baycentricCoords = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 24, RenderTextureFormat.ARGBFloat);
+            baycentricCoords.filterMode = FilterMode.Point;
+            baycentricCoords.anisoLevel = 0;
+            baycentricCoords.Create();
+
+            vertexIds = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 24, RenderTextureFormat.ARGBInt);
+            vertexIds.filterMode = FilterMode.Point;
+            vertexIds.anisoLevel = 0;
+            vertexIds.Create();
+            
+
+            cameraBuffer.Clear();
+
+            Shader uvRenderer = Shader.Find("Custom/UVRenderer");
+            Material uvRendererMaterial = new Material(uvRenderer);
+
+
+            //set render target
+            RenderBuffer[] cBuffer = new RenderBuffer[2] { baycentricCoords.colorBuffer, vertexIds.colorBuffer };
+
+            camera.SetTargetBuffers(cBuffer, baycentricCoords.depthBuffer);
+            #region clearing
+            cameraBuffer.ClearRenderTarget(true, true, new Color(0,0,0,0));
+
+            context.ExecuteCommandBuffer(cameraBuffer);
+            cameraBuffer.Clear();
+            #endregion
+
+            #region drawing
+            //setup settings for rendering unlit opaque materials
+            drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
+            drawSettings.sorting.flags = SortFlags.CommonOpaque;
+
+            filterSettings = new FilterRenderersSettings(true);
+
+            drawSettings.SetOverrideMaterial(uvRendererMaterial, 0);
+
+            //draw unlit opaque materials
+            context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
+
+            context.Submit();
+
+            RenderTexture.active = null;
+            #endregion
+            
+        }
+
+        cameraBuffer.EndSample("UVRenderer");
+        #endregion
+        
+        #region First Pass
+
+        //sample call for frame debugger
+        cameraBuffer.BeginSample("First Pass");
+
+        //set render target
+        camera.SetTargetBuffers(colorBuffers, depthBuffer);
 
         //clear render target
         #region clearing
@@ -134,14 +193,12 @@ public class MyPipeline : RenderPipeline {
 
 
         #region drawing
-        //set render target
-        camera.SetTargetBuffers(colorBuffers, depthBuffer);
-        //camera.SetTargetBuffers(mainImage.colorBuffer,mainImage.depthBuffer);
+
         //setup settings for rendering unlit opaque materials
-        var drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
+        drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
         drawSettings.sorting.flags = SortFlags.CommonOpaque;
    
-        var filterSettings = new FilterRenderersSettings(true);
+        filterSettings = new FilterRenderersSettings(true);
 
         //draw unlit opaque materials
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
@@ -150,15 +207,16 @@ public class MyPipeline : RenderPipeline {
         //Graphics.SetRenderTarget(null);
         #endregion
 
-        cameraBuffer.EndSample("Camera Render");
+        cameraBuffer.EndSample("First Pass");
 
         context.Submit();
         #endregion
-
-        //Graphics.Blit(mainImage,RenderTexture.active);
-        var result = runComputeShader(camera.pixelWidth,camera.pixelHeight);
         
+        var result = runComputeShader(camera.pixelWidth,camera.pixelHeight);
+
         #region Read-Back
+
+        cameraBuffer.BeginSample("Read Back");
 
         cameraBuffer.Clear();
 
@@ -193,13 +251,14 @@ public class MyPipeline : RenderPipeline {
         //draw unlit opaque materials
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
+        cameraBuffer.EndSample("Read Back");
         #endregion
 
-        
+
         context.Submit();
         result.Release();
         #endregion
-    
+        
     }
 
     //### other methodes #############################################################################################################

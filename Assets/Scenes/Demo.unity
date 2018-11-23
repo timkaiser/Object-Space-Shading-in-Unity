@@ -199,7 +199,7 @@ GameObject:
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -209,13 +209,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 394852490}
-  m_LocalRotation: {x: 0, y: 0.026176924, z: 0, w: 0.99965733}
+  m_LocalRotation: {x: 0, y: 0.17364816, z: 0, w: 0.9848078}
   m_LocalPosition: {x: 0, y: 1, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 935145190}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 3, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 20, z: 0}
 --- !u!135 &394852492
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36361ad69b708864aaf77442a4da74c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 10
 --- !u!1 &429615120
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,7 +294,6 @@ GameObject:
   - component: {fileID: 429615123}
   - component: {fileID: 429615122}
   - component: {fileID: 429615124}
-  - component: {fileID: 429615125}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Player
@@ -372,18 +371,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
---- !u!114 &429615125
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 429615120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf3c49a6fd6197b49a99b47879226360, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
 --- !u!1 &935145188
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +524,6 @@ GameObject:
   - component: {fileID: 1930457901}
   - component: {fileID: 1930457900}
   - component: {fileID: 1930457899}
-  - component: {fileID: 1930457902}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -605,18 +591,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1930457902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1930457898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21d86f4703956984b9e94b2fc7c107a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  test: {fileID: 8400000, guid: c15cca22e77f58f4ea030df1f5307f6b, type: 2}
 --- !u!1 &2115577090
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,7 +620,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rts: []
   CSoutputCopy: []
-  mainImage: {fileID: 0}
+  baycentricCoords: {fileID: 0}
+  vertexIds: {fileID: 0}
 --- !u!4 &2115577092
 Transform:
   m_ObjectHideFlags: 0
