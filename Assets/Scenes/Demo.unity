@@ -210,7 +210,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 394852490}
   m_LocalRotation: {x: 0, y: 0.17364816, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 1, z: -8}
+  m_LocalPosition: {x: 0, y: 1, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 935145190}
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36361ad69b708864aaf77442a4da74c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 30
 --- !u!1 &429615120
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +309,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 429615120}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -7}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 935145190}
@@ -393,12 +393,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 935145188}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36361ad69b708864aaf77442a4da74c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 30
 --- !u!4 &935145190
 Transform:
   m_ObjectHideFlags: 0
@@ -406,7 +406,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 935145188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1783570155}
@@ -622,6 +622,7 @@ MonoBehaviour:
   CSoutputCopy: []
   baycentricCoords: {fileID: 0}
   vertexIds: {fileID: 0}
+  finalImage: {fileID: 0}
 --- !u!4 &2115577092
 Transform:
   m_ObjectHideFlags: 0

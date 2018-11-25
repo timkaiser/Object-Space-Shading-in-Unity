@@ -10,11 +10,14 @@ public class Test : MonoBehaviour {
     public RenderTexture baycentricCoords;
     public RenderTexture vertexIds;
 
+    public RenderTexture finalImage;
+
     private void Update() {
         rts = MyPipeline.rts;
         CSoutputCopy = MyPipeline.CSoutputCopy;
         baycentricCoords = MyPipeline.baycentricCoords;
         vertexIds = MyPipeline.vertexIds;
+        finalImage = MyPipeline.finalImage;
     }
 
     #endif

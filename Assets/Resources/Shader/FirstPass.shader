@@ -71,12 +71,11 @@
 					o.worldPos.xyz = i.worldPos;
 					o.normal = i.normal;
 
-					float2 dx = ddx(i.uv);
-					float2 dy = ddy(i.uv);
-					float mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+					float2 dx = abs(ddx(i.uv));
+					float2 dy = abs(ddy(i.uv));
+					int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
 					o.worldPos.w = mipLevel;
 
-					//o.uv = float2(mipLevel / 10, 0);
 					return o;
 				}
 				ENDCG

@@ -18,11 +18,13 @@ public class MyPipeline : RenderPipeline {
     public static RenderTexture[] rts;
     public static RenderTexture baycentricCoords;
     public static RenderTexture vertexIds;
+    public static RenderTexture finalImage;
 
     #else
     RenderTexture[] rts;    
-    public static RenderTexture baycentricCoords;
-    public static RenderTexture vertexIds;
+    RenderTexture baycentricCoords;
+    RenderTexture vertexIds;
+    RenderTexture finalImage;
     #endif
 
 
@@ -78,6 +80,13 @@ public class MyPipeline : RenderPipeline {
             CSoutputCopy[i].Create();
         }
         #endif
+
+        //fianl Image
+        finalImage = new RenderTexture(width, height, 32, RenderTextureFormat.ARGBFloat);
+        finalImage.filterMode = FilterMode.Point;
+        finalImage.anisoLevel = 0;
+        finalImage.enableRandomWrite = true;
+        finalImage.Create();
     }
 
 
@@ -160,10 +169,8 @@ public class MyPipeline : RenderPipeline {
             context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
             context.Submit();
-
-            RenderTexture.active = null;
             #endregion
-            
+
         }
 
         cameraBuffer.EndSample("UVRenderer");
@@ -224,6 +231,7 @@ public class MyPipeline : RenderPipeline {
         Material secondPassMaterial = new Material(readBack);
         secondPassMaterial.SetTexture("_TextureArray", result);
 
+        Graphics.SetRenderTarget(finalImage);
 
         #region clearing
         cameraBuffer.ClearRenderTarget(
@@ -251,14 +259,19 @@ public class MyPipeline : RenderPipeline {
         //draw unlit opaque materials
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
+        //Graphics.SetRenderTarget(null);
+
         cameraBuffer.EndSample("Read Back");
         #endregion
 
 
         context.Submit();
         result.Release();
+
+
+        Graphics.Blit(finalImage, camera.activeTexture);
         #endregion
-        
+
     }
 
     //### other methodes #############################################################################################################

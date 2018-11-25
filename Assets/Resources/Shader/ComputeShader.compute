@@ -23,5 +23,5 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	int widthAtLevel = width >> mipLevel;
 	int heightAtLevel = height >> mipLevel;
 
-	Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y, mipLevel)] = normal;
+	Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y, mipLevel)] = float3(uv, 0);
 }

@@ -48,20 +48,19 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				//return fixed4(1,0,0,1);
-				/*float2 dx = ddx(i.uv);
-				float2 dy = ddy(i.uv);
-				float mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+				float2 dx = abs(ddx(i.uv));
+				float2 dy = abs(ddy(i.uv));
+				int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
 
 				
 				int powMipLevel = pow(2, mipLevel);
 				float2 uv = i.uv / powMipLevel;
 				return UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(uv, mipLevel));
-				*/
+				
 
 
 				
-				float4 result = float4(0,0,0,0);
+				/*float4 result = float4(0,0,0,0);
 				
 				for (int j = 0; j < 9; j++) {
 					int p = pow(2, j);
@@ -72,7 +71,7 @@
 						UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(i.uv / p, j)) : result;
 				}
 
-				return result;
+				return result;*/
 
 			}
 		ENDCG
