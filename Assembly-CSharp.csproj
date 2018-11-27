@@ -67,10 +67,11 @@
     <Compile Include="Assets\Resources\Scripts\Rotation.cs" />
     <Compile Include="Assets\Resources\Scripts\Test.cs" />
     <None Include="Assets\Resources\Shader\UVRenderer.shader" />
+    <None Include="Assets\Resources\Shader\WorldPosOSS.compute" />
     <None Include="Assets\Resources\Textures\Credits.txt" />
     <None Include="Assets\Resources\Shader\ReadBack.shader" />
     <None Include="Assets\Resources\Shader\FirstPass.shader" />
-    <None Include="Assets\Resources\Shader\ComputeShader.compute" />
+    <None Include="Assets\Resources\Shader\UVCoordReader.compute" />
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>

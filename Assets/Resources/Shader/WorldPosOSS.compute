@@ -1,0 +1,32 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+Matrix localToWorldMatrix;
+Texture2DArray<float3> tileMask;
+Texture2D<uint3> vertexIds;
+Texture2D<float3> baycentCoords;
+RWStructuredBuffer<float3> vertexPositions;
+RWTexture2DArray<float3> Output;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	uint width, height, elements;
+	Output.GetDimensions(width, height, elements);
+	
+	for (uint mipLevel = 0; mipLevel < elements; mipLevel++) {
+		uint widthAtLevel = width >> mipLevel;
+		uint heightAtLevel = height >> mipLevel;
+		if (id.x < widthAtLevel && id.y < widthAtLevel && tileMask[uint3((uint2)(id.xy/8),mipLevel)].x == 1) {
+			uint2 xy = (uint2)(id.xy * pow(2, mipLevel));
+			
+			float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x 
+				+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y 
+				+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
+
+			float4 worldPos = mul(localToWorldMatrix, float4(localPos,1));
+
+			Output[uint3(id.xy, mipLevel)] = worldPos;//baycentCoords[(uint2)(id.xy * pow(2, mipLevel))]; //float3((float)id.x / widthAtLevel, (float)id.y / heightAtLevel, 0);
+		}
+	}
+}

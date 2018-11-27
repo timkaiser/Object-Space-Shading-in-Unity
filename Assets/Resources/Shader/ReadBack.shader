@@ -56,23 +56,6 @@
 				int powMipLevel = pow(2, mipLevel);
 				float2 uv = i.uv / powMipLevel;
 				return UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(uv, mipLevel));
-				
-
-
-				
-				/*float4 result = float4(0,0,0,0);
-				
-				for (int j = 0; j < 9; j++) {
-					int p = pow(2, j);
-					result = ((int)(result.r * 1000) == 0 
-						&& (int)(result.g * 1000) == 0
-						&& (int)(result.b * 1000) == 0
-						&& (int)(result.a * 1000) == 0)? 
-						UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(i.uv / p, j)) : result;
-				}
-
-				return result;*/
-
 			}
 		ENDCG
 		}

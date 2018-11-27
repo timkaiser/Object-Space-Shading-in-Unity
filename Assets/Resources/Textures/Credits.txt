@@ -1,7 +1,7 @@
 Textures:
 SOLAR SYSTEM SCOPE
 https://www.solarsystemscope.com/textures/
-(no changes to textures done)
+(resized texture to 512x512)
 
 
 CC 4.0
