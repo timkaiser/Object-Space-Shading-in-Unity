@@ -26,7 +26,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
 			float4 worldPos = mul(localToWorldMatrix, float4(localPos,1));
 
-			Output[uint3(id.xy, mipLevel)] = worldPos;//baycentCoords[(uint2)(id.xy * pow(2, mipLevel))]; //float3((float)id.x / widthAtLevel, (float)id.y / heightAtLevel, 0);
+			Output[uint3(id.xy, mipLevel)] = worldPos;
 		}
 	}
 }

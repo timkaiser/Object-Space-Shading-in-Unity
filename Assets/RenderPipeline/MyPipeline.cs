@@ -88,7 +88,7 @@ public class MyPipeline : RenderPipeline {
         //debug for cs output
         tileMaskCopy = new RenderTexture[MIP_MAP_COUNT];
         for (int i = 0; i < MIP_MAP_COUNT; ++i) {
-            tileMaskCopy[i] = new RenderTexture(MAX_TEXTURE_SIZE/8, MAX_TEXTURE_SIZE/8, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Default);
+            tileMaskCopy[i] = new RenderTexture(MAX_TEXTURE_SIZE/8, MAX_TEXTURE_SIZE/8, 0, RenderTextureFormat.R8, RenderTextureReadWrite.Default);
             tileMaskCopy[i].filterMode = FilterMode.Point;
             tileMaskCopy[i].Create();
         }
@@ -151,9 +151,12 @@ public class MyPipeline : RenderPipeline {
             bool isCamOrth = camera.orthographic;
             float camNear = camera.nearClipPlane;
             float camSize = camera.orthographicSize;
+            Vector3 camPos = camera.transform.position;
+            Quaternion camRot = camera.transform.rotation;
             camera.orthographic = true;
             camera.nearClipPlane = 0;
             camera.orthographicSize = 0.5f;
+            camera.transform.SetPositionAndRotation(Vector3.zero, Quaternion.EulerRotation(0, 0, 0));
 
             context.SetupCameraProperties(camera);
 
@@ -204,6 +207,7 @@ public class MyPipeline : RenderPipeline {
             camera.orthographic = isCamOrth;
             camera.nearClipPlane = camNear;
             camera.orthographicSize = camSize;
+            camera.transform.SetPositionAndRotation(camPos, camRot);
             #endregion
 
             //reset render target
@@ -320,7 +324,7 @@ public class MyPipeline : RenderPipeline {
 
     RenderTexture runTileMaskShader(int width, int height) {
         Graphics.SetRenderTarget(null);
-        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE/8);
+        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE/8, RenderTextureFormat.R8);
 
         tileMaskShader.SetTexture(tileMaskKernel, "Output", result);
         tileMaskShader.SetTexture(tileMaskKernel, "ID", rts[0]);
@@ -349,7 +353,7 @@ public class MyPipeline : RenderPipeline {
         vertexBuffer.SetData(vertices);
 
         Graphics.SetRenderTarget(null);
-        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE);
+        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat);
 
         worldPosShader.SetMatrix("localToWorldMatrix", obj.GetComponent<Renderer>().localToWorldMatrix);
         worldPosShader.SetTexture(worldPosKernel, "tileMask", tileMask);
@@ -372,8 +376,8 @@ public class MyPipeline : RenderPipeline {
         return result;
     }
 
-    RenderTexture CreateIntermediateCSTarget(int size) {
-        var result = new RenderTexture(size, size, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Default);
+    RenderTexture CreateIntermediateCSTarget(int size, RenderTextureFormat rtFormat) {
+        var result = new RenderTexture(size, size, 0, rtFormat, RenderTextureReadWrite.Default);
         result.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
         result.enableRandomWrite = true;
         result.filterMode = FilterMode.Point;
