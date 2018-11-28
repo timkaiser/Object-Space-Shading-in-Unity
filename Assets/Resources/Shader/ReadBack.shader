@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_TextureArray("_TextureArray", 2DArray) = "" {}
+		_TextureAtlas("_TextureAtlas", 2D) = "" {}
 		_TextureSize("TextureSize", Int) = 512
 	}
 		SubShader
@@ -33,7 +33,7 @@
 				float2 uv : TEXCOORD0;
 			};
 
-			UNITY_DECLARE_TEX2DARRAY(_TextureArray);
+			sampler2D _TextureAtlas;
 			int _TextureSize;
 
 
@@ -50,12 +50,12 @@
 			{
 				float2 dx = abs(ddx(i.uv));
 				float2 dy = abs(ddy(i.uv));
-				int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
-
-				
-				int powMipLevel = pow(2, mipLevel);
+				uint mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+				uint powMipLevel = pow(2, mipLevel);
+				float2 atlasOffset = float2(1.0-(1.0/ powMipLevel),0);
 				float2 uv = i.uv / powMipLevel;
-				return UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(uv, mipLevel));
+
+				return tex2D(_TextureAtlas, atlasOffset + uv);
 			}
 		ENDCG
 		}

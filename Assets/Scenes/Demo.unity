@@ -210,7 +210,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 394852490}
   m_LocalRotation: {x: 0, y: 0.17364816, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0.2, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 935145190}
@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 429615124}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Player
+  m_TagString: RenderObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -619,12 +619,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rts: []
-  tileMask: []
-  textureCopy: []
+  tileMask: {fileID: 0}
+  worldPos: {fileID: 0}
   baycentricCoords: {fileID: 0}
   vertexIds: {fileID: 0}
   finalImage: {fileID: 0}
-  vertices: []
 --- !u!4 &2115577092
 Transform:
   m_ObjectHideFlags: 0

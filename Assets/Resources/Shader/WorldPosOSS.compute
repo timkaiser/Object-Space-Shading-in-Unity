@@ -2,31 +2,71 @@
 #pragma kernel CSMain
 
 Matrix localToWorldMatrix;
-Texture2DArray<float3> tileMask;
+Texture2D<float3> tileMask;
 Texture2D<uint3> vertexIds;
 Texture2D<float3> baycentCoords;
 RWStructuredBuffer<float3> vertexPositions;
-RWTexture2DArray<float3> Output;
+RWTexture2D<float3> Output;
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+	if (tileMask[(uint2)(id.xy / 8)].x == 0) { return; }
+
+	uint width, height;
+	Output.GetDimensions(width, height);	
+
+	uint mipLevel = 0;
+	uint x = id.x;
+
+	for (uint w = width / 2; x > w; w /= 2) {
+		mipLevel += (x > w) ? 1 : 0;
+		x -= w;
+	}
+
+	uint widthAtLevel = width >> mipLevel + 1;
+	uint heightAtLevel = height >> mipLevel;
+
+	uint2 atlasOffset = uint2(width - 2 * widthAtLevel, 0);
+
+	
+
+
+	uint2 xy = id.xy - atlasOffset;
+
+	if (xy.x > widthAtLevel || xy.y > heightAtLevel) { return; }
+
+	xy = xy * pow(2, mipLevel);
+
+	float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
+		+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
+		+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
+
+	float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
+
+
+	Output[id.xy] = worldPos;
+
+}
+
+/*void CSMain2(uint3 id : SV_DispatchThreadID)
+{
 	uint width, height, elements;
 	Output.GetDimensions(width, height, elements);
-	
+
 	for (uint mipLevel = 0; mipLevel < elements; mipLevel++) {
 		uint widthAtLevel = width >> mipLevel;
 		uint heightAtLevel = height >> mipLevel;
-		if (id.x < widthAtLevel && id.y < widthAtLevel && tileMask[uint3((uint2)(id.xy/8),mipLevel)].x == 1) {
+		if (id.x < widthAtLevel && id.y < widthAtLevel && tileMask[uint3((uint2)(id.xy / 8), mipLevel)].x == 1) {
 			uint2 xy = (uint2)(id.xy * pow(2, mipLevel));
-			
-			float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x 
-				+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y 
+
+			float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
+				+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
 				+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
 
-			float4 worldPos = mul(localToWorldMatrix, float4(localPos,1));
+			float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
 
 			Output[uint3(id.xy, mipLevel)] = worldPos;
 		}
 	}
-}
+}*/

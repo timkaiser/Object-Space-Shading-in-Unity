@@ -15,8 +15,8 @@ public class MyPipeline : RenderPipeline {
     Texture texture;
     /* Public static for debugging reasons*/
     #if DEBUG
-    public static RenderTexture[] tileMaskCopy;
-    public static RenderTexture[] worldPosMapCopy;
+    public static RenderTexture tileMaskCopy;
+    public static RenderTexture worldPosMapCopy;
     public static RenderTexture[] rts;
     public static RenderTexture[] loadedTexture;
     public static RenderTexture baycentricCoords;
@@ -84,22 +84,10 @@ public class MyPipeline : RenderPipeline {
         worldPosShader = (ComputeShader)Resources.Load("Shader/WorldPosOSS");
         worldPosKernel = worldPosShader.FindKernel("CSMain");
 
-#if DEBUG
-        //debug for cs output
-        tileMaskCopy = new RenderTexture[MIP_MAP_COUNT];
-        for (int i = 0; i < MIP_MAP_COUNT; ++i) {
-            tileMaskCopy[i] = new RenderTexture(MAX_TEXTURE_SIZE/8, MAX_TEXTURE_SIZE/8, 0, RenderTextureFormat.R8, RenderTextureReadWrite.Default);
-            tileMaskCopy[i].filterMode = FilterMode.Point;
-            tileMaskCopy[i].Create();
-        }
-
-        worldPosMapCopy = new RenderTexture[MIP_MAP_COUNT];
-        for (int i = 0; i < MIP_MAP_COUNT; ++i) {
-            worldPosMapCopy[i] = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Default);
-            worldPosMapCopy[i].filterMode = FilterMode.Point;
-            worldPosMapCopy[i].Create();
-        }
-#endif
+        #if DEBUG
+        tileMaskCopy = new RenderTexture(MAX_TEXTURE_SIZE / 4, MAX_TEXTURE_SIZE / 8, 0, RenderTextureFormat.R8);
+        worldPosMapCopy = new RenderTexture(MAX_TEXTURE_SIZE*2, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
+        #endif
 
         //fianl Image
         finalImage = new RenderTexture(width, height, 32, RenderTextureFormat.ARGBFloat);
@@ -142,7 +130,7 @@ public class MyPipeline : RenderPipeline {
         #endregion
 
         #endregion
-
+        
         #region UV Renderer
         cameraBuffer.BeginSample("UV Renderer");
 
@@ -267,14 +255,14 @@ public class MyPipeline : RenderPipeline {
         #endregion
 
         #region Read-Back
-
+        
         cameraBuffer.BeginSample("Read Back");
 
         cameraBuffer.Clear();
 
         Shader readBack = Shader.Find("Custom/ReadBack");
         Material secondPassMaterial = new Material(readBack);
-        secondPassMaterial.SetTexture("_TextureArray", worldPosMap);
+        secondPassMaterial.SetTexture("_TextureAtlas", worldPosMap);
 
         Graphics.SetRenderTarget(finalImage);
 
@@ -316,8 +304,8 @@ public class MyPipeline : RenderPipeline {
 
         Graphics.Blit(finalImage, camera.activeTexture);
         //Graphics.Blit(baycentricCoords, camera.activeTexture);
+        
         #endregion
-
     }
 
     //### other methodes #############################################################################################################
@@ -337,9 +325,7 @@ public class MyPipeline : RenderPipeline {
 
         #if DEBUG
         //debug for cs output
-        for (int i = 0; i < MIP_MAP_COUNT; ++i) {
-            Graphics.CopyTexture(result, i, tileMaskCopy[i], 0);
-        }
+        Graphics.CopyTexture(result, tileMaskCopy);
         #endif
         return result;
     }
@@ -363,13 +349,11 @@ public class MyPipeline : RenderPipeline {
         worldPosShader.SetTexture(worldPosKernel, "Output", result);
 
         //Call compute shader
-        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE / 8, MAX_TEXTURE_SIZE / 8, 1);
+        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 8, MAX_TEXTURE_SIZE / 8, 1);
 
         #if DEBUG
         //debug for cs output
-        for (int i = 0; i < MIP_MAP_COUNT; ++i) {
-            Graphics.CopyTexture(result, i, worldPosMapCopy[i], 0);
-        }
+        Graphics.CopyTexture(result, worldPosMapCopy);
         #endif
 
         vertexBuffer.Release();
@@ -377,12 +361,10 @@ public class MyPipeline : RenderPipeline {
     }
 
     RenderTexture CreateIntermediateCSTarget(int size, RenderTextureFormat rtFormat) {
-        var result = new RenderTexture(size, size, 0, rtFormat, RenderTextureReadWrite.Default);
-        result.dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray;
+        var result = new RenderTexture(size*2, size, 0, rtFormat, RenderTextureReadWrite.Default);
         result.enableRandomWrite = true;
         result.filterMode = FilterMode.Point;
         result.anisoLevel = 0;
-        result.volumeDepth = MIP_MAP_COUNT;
         result.Create();
 
         return result;
