@@ -1,36 +1,51 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(31): integer divides may be much slower, try using uints if possible.
-  error: 1 plat 4 at WorldPosOSS.compute(31): signed/unsigned mismatch, unsigned assumed
-  error: 1 plat 4 at WorldPosOSS.compute(32): signed/unsigned mismatch, unsigned assumed
-  api=4 insize=1832 outsize=1029 ok=1
+  api=4 insize=1148 outsize=941 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at UVCoordReader.compute(13): integer divides may be much slower, try using uints if possible.
+  api=4 insize=1000 outsize=937 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=1892 outsize=937 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  error: 2 plat 4 at WorldPosOSS.compute(40): int or unsigned int type required
+  api=4 insize=2356 outsize=0 ok=0
+Cmd: compileComputeKernel
+  error: 2 plat 4 at WorldPosOSS.compute(45): undeclared identifier 'width'
+  api=4 insize=2382 outsize=0 ok=0
+Cmd: compileComputeKernel
+  api=4 insize=2393 outsize=973 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(39): implicit truncation of vector type
-  api=4 insize=1894 outsize=1817 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  api=4 insize=2397 outsize=889 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(48): undeclared identifier 'mipLevle'
-  api=4 insize=2023 outsize=0 ok=0
+  api=4 insize=2399 outsize=1073 ok=1
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=2025 outsize=1113 ok=1
+  api=4 insize=2411 outsize=1105 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

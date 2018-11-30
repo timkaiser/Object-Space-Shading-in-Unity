@@ -8,35 +8,43 @@ Texture2D<float3> baycentCoords;
 RWStructuredBuffer<float3> vertexPositions;
 RWTexture2D<float3> Output;
 
+float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
+	uint mip = 0;
+
+	for (uint w = atlasWidth / 2; xy.x >= w; w /= 2) {
+		mip += 1;
+		xy.x -= w;
+	}
+
+	uint widthAtLevel = atlasWidth / 2 >> mip;
+	uint heightAtLevel = atlasHeight >> mip;
+
+	uint offset = atlasWidth - 2 * widthAtLevel;
+
+	float2 uv = float2((float)xy.x / widthAtLevel, (float)xy.y / heightAtLevel);
+
+	return float3(uv, mip);
+}
+
+
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
 	if (tileMask[(uint2)(id.xy / 8)].x == 0) { return; }
 
-	uint width, height;
-	Output.GetDimensions(width, height);	
+	uint atlasWidth, atlasHeight;
+	Output.GetDimensions(atlasWidth, atlasHeight);
 
-	uint mipLevel = 0;
-	uint x = id.x;
+	float3 uvMip = px_to_uv_coords(id.xy, atlasWidth, atlasHeight);
 
-	for (uint w = width / 2; x > w; w /= 2) {
-		mipLevel += (x > w) ? 1 : 0;
-		x -= w;
-	}
+	uint widthAtLevel = atlasWidth / 2 >> (uint) uvMip.z;
+	uint heightAtLevel = atlasHeight >> (uint) uvMip.z;
 
-	uint widthAtLevel = width >> mipLevel + 1;
-	uint heightAtLevel = height >> mipLevel;
+	uint offset = atlasWidth - 2 * widthAtLevel;
 
-	uint2 atlasOffset = uint2(width - 2 * widthAtLevel, 0);
+	if (id.xy.x - offset > widthAtLevel || id.xy.y > heightAtLevel) { return; }
 
-	
-
-
-	uint2 xy = id.xy - atlasOffset;
-
-	if (xy.x > widthAtLevel || xy.y > heightAtLevel) { return; }
-
-	xy = xy * pow(2, mipLevel);
+	uint2 xy = uvMip.xy * uint2(atlasWidth / 2, atlasHeight);
 
 	float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
 		+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
@@ -48,25 +56,3 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 	Output[id.xy] = worldPos;
 
 }
-
-/*void CSMain2(uint3 id : SV_DispatchThreadID)
-{
-	uint width, height, elements;
-	Output.GetDimensions(width, height, elements);
-
-	for (uint mipLevel = 0; mipLevel < elements; mipLevel++) {
-		uint widthAtLevel = width >> mipLevel;
-		uint heightAtLevel = height >> mipLevel;
-		if (id.x < widthAtLevel && id.y < widthAtLevel && tileMask[uint3((uint2)(id.xy / 8), mipLevel)].x == 1) {
-			uint2 xy = (uint2)(id.xy * pow(2, mipLevel));
-
-			float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
-				+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
-				+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
-
-			float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
-
-			Output[uint3(id.xy, mipLevel)] = worldPos;
-		}
-	}
-}*/

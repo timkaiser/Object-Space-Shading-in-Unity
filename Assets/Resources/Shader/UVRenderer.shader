@@ -56,7 +56,7 @@
 				v.vertex = float4(v.uv.xy-0.5, 0, 1.0);	
 				v.vertex = mul(UNITY_MATRIX_V, v.vertex);
 				v.vertex = mul(UNITY_MATRIX_P, v.vertex);
-				o.vertex = float4(v.vertex.xy, 0, 510/512.0); //HOW CAN I AVOID THIS SCALE FACTOR?
+				o.vertex = float4(v.vertex.xy, 0, 512/512.0); //HOW CAN I AVOID THIS SCALE FACTOR?
 				o.uv = v.uv;
 				o.vertexId = v.vertexId;
 				return o;

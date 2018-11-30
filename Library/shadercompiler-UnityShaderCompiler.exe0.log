@@ -1,2 +1,142 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=817 outsize=816 ok=1
+Cmd: preprocessCompute
+  insize=2059 outsize=2058 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=1153 outsize=1152 ok=1
+Cmd: preprocessCompute
+  insize=1149 outsize=1148 ok=1
+Cmd: preprocessCompute
+  insize=1052 outsize=1051 ok=1
+Cmd: compileComputeKernel
+  error: 2 plat 4 at UVCoordReader.compute(24): undeclared identifier 'widht'
+  api=4 insize=1051 outsize=0 ok=0
+Cmd: preprocessCompute
+  insize=1052 outsize=1051 ok=1
+Cmd: preprocessCompute
+  insize=1084 outsize=1085 ok=1
+Cmd: preprocessCompute
+  insize=1056 outsize=1055 ok=1
+Cmd: preprocessCompute
+  insize=1001 outsize=1000 ok=1
+Cmd: preprocessCompute
+  insize=1013 outsize=1012 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=1990 outsize=1989 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2029 outsize=2028 ok=1
+Cmd: preprocessCompute
+  insize=2029 outsize=2028 ok=1
+Cmd: initializeCompiler
+Cmd: preprocess
+  insize=1132 outsize=280 ok=1
+Cmd: initializeCompiler
+Cmd: preprocess
+  insize=1148 outsize=280 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2448 outsize=2447 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(14): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at WorldPosOSS.compute(15): signed/unsigned mismatch, unsigned assumed
+  error: 2 plat 4 at WorldPosOSS.compute(26): undeclared identifier 'u'
+  api=4 insize=2447 outsize=0 ok=0
+Cmd: preprocessCompute
+  insize=2446 outsize=2445 ok=1
+Cmd: preprocessCompute
+  insize=2442 outsize=2441 ok=1
+Cmd: preprocessCompute
+  insize=2347 outsize=2346 ok=1
+Cmd: preprocessCompute
+  insize=2357 outsize=2356 ok=1
+Cmd: preprocessCompute
+  insize=2371 outsize=2370 ok=1
+Cmd: preprocessCompute
+  insize=2383 outsize=2382 ok=1
+Cmd: preprocessCompute
+  insize=2394 outsize=2393 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2396 outsize=2395 ok=1
+Cmd: preprocessCompute
+  insize=2396 outsize=2395 ok=1
+Cmd: preprocessCompute
+  insize=2396 outsize=2395 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=2395 outsize=985 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2398 outsize=2397 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2398 outsize=2397 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=2397 outsize=1073 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2400 outsize=2399 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2440 outsize=2439 ok=1
+Cmd: preprocessCompute
+  insize=2412 outsize=2411 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2412 outsize=2411 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=2413 outsize=2412 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=1610 outsize=1609 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(56): implicit truncation of vector type
+  api=4 insize=1609 outsize=1977 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocess
+  insize=2167 outsize=187 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2420 outsize=762 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2420 outsize=442 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=4 insize=2420 outsize=906 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler

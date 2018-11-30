@@ -54,6 +54,7 @@
 				uint powMipLevel = pow(2, mipLevel);
 				float2 atlasOffset = float2(1.0-(1.0/ powMipLevel),0);
 				float2 uv = i.uv / powMipLevel;
+				uv.x /= 2;
 
 				return tex2D(_TextureAtlas, atlasOffset + uv);
 			}

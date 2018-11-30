@@ -9,6 +9,18 @@ Texture2D<float3> Normal;
 Texture2D<float2> UV;
 RWTexture2D<float3> Output;
 
+uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
+	uint widthAtLevel = atlasWidth / 2 >> mip;
+	uint heightAtLevel = atlasHeight >> mip;
+
+	uint2 xy = uint2(widthAtLevel * uv.x, heightAtLevel * uv.y);
+
+	uint offset = atlasWidth - 2 * widthAtLevel;
+
+	return uint2(xy.x + offset, xy.y);
+
+}
+
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
@@ -19,10 +31,11 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	uint width, height;
 	Output.GetDimensions(width, height);
 
-	int mipLevel = worldPos.w;
-	int widthAtLevel = width >> mipLevel;
-	int heightAtLevel = height >> mipLevel;
-	int2 atlasOffset = int2(width - 2* widthAtLevel, 0);
+	uint mipLevel = worldPos.w;
 
-	Output[atlasOffset + int2(widthAtLevel*uv.x, heightAtLevel*uv.y)] = float3(1,0,0);
+	uint2 xy = uv_to_px_coords(uv, mipLevel, width, height);
+
+	Output[xy] = float3(1,0,0);
 }
+
+

@@ -1,8 +1,9 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(28): incorrect number of arguments to numeric-type constructor
-  api=4 insize=1707 outsize=0 ok=0
+  api=4 insize=816 outsize=941 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -12,24 +13,40 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(26): 'pow': no matching 2 parameter intrinsic function; Possible intrinsic functions are: pow(float|half|min10float|min16float, float|half|min10float|min16float)
-  error: 2 plat 4 at WorldPosOSS.compute(26): undeclared identifier 'mipLevel'
-  api=4 insize=1785 outsize=0 ok=0
+  error: 2 plat 4 at UVCoordReader.compute(38): undeclared identifier 'atlasOffset'
+  api=4 insize=1055 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(38): implicit truncation of vector type
-  api=4 insize=1887 outsize=1817 ok=1
+  error: 2 plat 4 at WorldPosOSS.compute(36): undeclared identifier 'width'
+  api=4 insize=2346 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=4 insize=2439 outsize=1105 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

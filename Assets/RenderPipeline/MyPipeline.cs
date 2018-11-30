@@ -127,6 +127,8 @@ public class MyPipeline : RenderPipeline {
         }
 
         CullResults.Cull(ref cullingParameters, context, ref cull);
+
+        
         #endregion
 
         #endregion
@@ -254,8 +256,13 @@ public class MyPipeline : RenderPipeline {
         var worldPosMap = runWorldPosMapShader(tileMask);
         #endregion
 
+        //Vector2Int v = uv_to_px_coords(0.1f, 0.0f, 8, 1024, 512);
+        //Debug.Log(v.ToString() + " -> " + px_to_uv_coords(v.x,v.y,1024,512).ToString());
+        //Debug.Log(uv_to_px_coords(1.0f, 0.0f, 5, 1024, 512));
+
+
         #region Read-Back
-        
+
         cameraBuffer.BeginSample("Read Back");
 
         cameraBuffer.Clear();
@@ -358,6 +365,7 @@ public class MyPipeline : RenderPipeline {
 
         vertexBuffer.Release();
         return result;
+
     }
 
     RenderTexture CreateIntermediateCSTarget(int size, RenderTextureFormat rtFormat) {
@@ -379,4 +387,40 @@ public class MyPipeline : RenderPipeline {
         return vList.ToArray();
     }
 
+    Vector2Int uv_to_px_coords(float u, float v, int mip, int atlasWidth, int atlasHeight) {
+        int widthAtLevel = atlasWidth/2 >> mip;
+        int heightAtLevel = atlasHeight >> mip;
+
+        int x = (int)(widthAtLevel * u);
+        int y = (int)(heightAtLevel * v);
+
+        int offset = atlasWidth - 2 * widthAtLevel;
+
+        return new Vector2Int(x + offset, y);
+
+    }
+
+    Vector3 px_to_uv_coords(int x, int y, int atlasWidth, int atlasHeight) {
+        int mip = 0;
+
+        for (int w = atlasWidth / 2; x > w; w /= 2) {
+            mip += (x > w) ? 1 : 0;
+            x -= w;
+        }
+
+        int widthAtLevel = atlasWidth / 2 >> mip;
+        int heightAtLevel = atlasHeight >> mip;
+
+        int offset = atlasWidth - 2 * widthAtLevel;
+
+        Debug.Log(x + " | " + offset);
+
+        //x -= offset;
+
+        float u = (float)x / widthAtLevel;
+        float v = (float)y / heightAtLevel;
+
+        return new Vector3(u, v, mip);
+
+    }
 }

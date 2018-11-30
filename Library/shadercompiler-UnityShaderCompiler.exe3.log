@@ -1,7 +1,21 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=1706 outsize=609 ok=1
+  error: 2 plat 4 at UVCoordReader.compute(40): syntax error: unexpected token 'new'
+  api=4 insize=1152 outsize=0 ok=0
+Cmd: compileComputeKernel
+  error: 2 plat 4 at UVCoordReader.compute(25): undeclared identifier 'uv_to_px_coords'
+  api=4 insize=1085 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -14,27 +28,20 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(39): implicit truncation of vector type
-  api=4 insize=1892 outsize=1789 ok=1
+  error: 1 plat 4 at WorldPosOSS.compute(14): signed/unsigned mismatch, unsigned assumed
+  error: 1 plat 4 at WorldPosOSS.compute(15): signed/unsigned mismatch, unsigned assumed
+  api=4 insize=2445 outsize=505 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=2441 outsize=505 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(46): implicit truncation of vector type
-  error: 2 plat 4 at WorldPosOSS.compute(51): syntax error: unexpected token '}'
-  api=4 insize=1970 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(46): implicit truncation of vector type
-  api=4 insize=1961 outsize=1785 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(48): implicit truncation of vector type
-  api=4 insize=1995 outsize=1953 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+  api=4 insize=2411 outsize=1105 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
