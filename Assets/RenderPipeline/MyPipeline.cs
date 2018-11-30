@@ -18,9 +18,6 @@ public class MyPipeline : RenderPipeline {
     public static RenderTexture tileMaskCopy;
     public static RenderTexture worldPosMapCopy;
     public static RenderTexture[] rts;
-    public static RenderTexture[] loadedTexture;
-    public static RenderTexture baycentricCoords;
-    public static RenderTexture vertexIds;
     public static RenderTexture finalImage;
 
 #else
@@ -43,6 +40,16 @@ public class MyPipeline : RenderPipeline {
     private int tileMaskKernel;
     private ComputeShader worldPosShader;
     private int worldPosKernel;
+
+    //scene objects
+    [System.Serializable]
+    public struct ObjData {
+        public GameObject obj;
+        public RenderTexture baycentricCoords;
+        public RenderTexture vertexIds;
+    }
+
+    public static List<ObjData> sceneObjects;
 
     //### Constructor ##############################################################################################################
     public MyPipeline() {
@@ -128,15 +135,15 @@ public class MyPipeline : RenderPipeline {
 
         CullResults.Cull(ref cullingParameters, context, ref cull);
 
-        
+
         #endregion
 
         #endregion
-        
+
         #region UV Renderer
         cameraBuffer.BeginSample("UV Renderer");
 
-        if (baycentricCoords == null || vertexIds == null) {
+        if (sceneObjects == null) {
             //Set camera to pass through
             bool isCamOrth = camera.orthographic;
             float camNear = camera.nearClipPlane;
@@ -150,55 +157,67 @@ public class MyPipeline : RenderPipeline {
 
             context.SetupCameraProperties(camera);
 
-            //Initilize RenderTexture for baycentric coordinate/vertex id
-            baycentricCoords = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
-            baycentricCoords.filterMode = FilterMode.Point;
-            baycentricCoords.anisoLevel = 0;
-            baycentricCoords.Create();
+            //initialize list
+            sceneObjects = new List<ObjData>();
 
-            vertexIds = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 24, RenderTextureFormat.ARGBInt);
-            vertexIds.filterMode = FilterMode.Point;
-            vertexIds.anisoLevel = 0;
-            vertexIds.Create();
+            foreach (MeshFilter mesh in GameObject.FindObjectsOfType<MeshFilter>()) {
+                ObjData obj = new ObjData();
+                obj.obj = mesh.gameObject;
+
+                //Initilize RenderTexture for baycentric coordinate/vertex id
+                obj.baycentricCoords = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
+                obj.baycentricCoords.filterMode = FilterMode.Point;
+                obj.baycentricCoords.anisoLevel = 0;
+                obj.baycentricCoords.Create();
+
+                obj.vertexIds = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 24, RenderTextureFormat.ARGBInt);
+                obj.vertexIds.filterMode = FilterMode.Point;
+                obj.vertexIds.anisoLevel = 0;
+                obj.vertexIds.Create();
 
 
-            cameraBuffer.Clear();
+                cameraBuffer.Clear();
 
-            Shader uvRenderer = Shader.Find("Custom/UVRenderer");
-            Material uvRendererMaterial = new Material(uvRenderer);
+                Shader uvRenderer = Shader.Find("Custom/UVRenderer");
+                Material uvRendererMaterial = new Material(uvRenderer);
 
 
-            //set render target
-            RenderBuffer[] cBuffer = new RenderBuffer[2] { baycentricCoords.colorBuffer, vertexIds.colorBuffer };
+                //set render target
+                RenderBuffer[] cBuffer = new RenderBuffer[2] { obj.baycentricCoords.colorBuffer, obj.vertexIds.colorBuffer };
 
-            camera.SetTargetBuffers(cBuffer, baycentricCoords.depthBuffer);
-            #region clearing
-            cameraBuffer.ClearRenderTarget(true, true, new Color(0,0,0,0));
+                camera.SetTargetBuffers(cBuffer, obj.baycentricCoords.depthBuffer);
+                #region clearing
+                cameraBuffer.ClearRenderTarget(true, true, new Color(0, 0, 0, 0));
 
-            context.ExecuteCommandBuffer(cameraBuffer);
-            cameraBuffer.Clear();
-            #endregion
+                context.ExecuteCommandBuffer(cameraBuffer);
+                cameraBuffer.Clear();
+                #endregion
 
-            #region drawing
-            //setup settings for rendering unlit opaque materials
-            drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
-            drawSettings.sorting.flags = SortFlags.CommonOpaque;
+                #region drawing
+                //setup settings for rendering unlit opaque materials
+                drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
+                drawSettings.sorting.flags = SortFlags.CommonOpaque;
 
-            filterSettings = new FilterRenderersSettings(true);
+                filterSettings = new FilterRenderersSettings(true);
 
-            drawSettings.SetOverrideMaterial(uvRendererMaterial, 0);
+                drawSettings.SetOverrideMaterial(uvRendererMaterial, 0);
 
-            //draw unlit opaque materials
-            context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
+                //draw unlit opaque materials
+                context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
-            context.Submit();
+                #endregion
+                context.Submit();
+
+
+                sceneObjects.Add(obj);
+            }
 
             //reset camera
             camera.orthographic = isCamOrth;
             camera.nearClipPlane = camNear;
             camera.orthographicSize = camSize;
             camera.transform.SetPositionAndRotation(camPos, camRot);
-            #endregion
+            
 
             //reset render target
             Graphics.SetRenderTarget(null);
@@ -206,7 +225,11 @@ public class MyPipeline : RenderPipeline {
 
         cameraBuffer.EndSample("UVRenderer");
         #endregion
-        
+
+
+        #region disabled
+        /*
+
         #region First Pass
 
         //sample call for frame debugger
@@ -255,11 +278,6 @@ public class MyPipeline : RenderPipeline {
 
         var worldPosMap = runWorldPosMapShader(tileMask);
         #endregion
-
-        //Vector2Int v = uv_to_px_coords(0.1f, 0.0f, 8, 1024, 512);
-        //Debug.Log(v.ToString() + " -> " + px_to_uv_coords(v.x,v.y,1024,512).ToString());
-        //Debug.Log(uv_to_px_coords(1.0f, 0.0f, 5, 1024, 512));
-
 
         #region Read-Back
 
@@ -311,7 +329,9 @@ public class MyPipeline : RenderPipeline {
 
         Graphics.Blit(finalImage, camera.activeTexture);
         //Graphics.Blit(baycentricCoords, camera.activeTexture);
-        
+
+        #endregion
+        */
         #endregion
     }
 
@@ -350,8 +370,8 @@ public class MyPipeline : RenderPipeline {
 
         worldPosShader.SetMatrix("localToWorldMatrix", obj.GetComponent<Renderer>().localToWorldMatrix);
         worldPosShader.SetTexture(worldPosKernel, "tileMask", tileMask);
-        worldPosShader.SetTexture(worldPosKernel, "vertexIds", vertexIds);
-        worldPosShader.SetTexture(worldPosKernel, "baycentCoords", baycentricCoords);
+        //worldPosShader.SetTexture(worldPosKernel, "vertexIds", vertexIds);
+        //worldPosShader.SetTexture(worldPosKernel, "baycentCoords", baycentricCoords);
         worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", vertexBuffer);
         worldPosShader.SetTexture(worldPosKernel, "Output", result);
 
@@ -386,41 +406,5 @@ public class MyPipeline : RenderPipeline {
         }
         return vList.ToArray();
     }
-
-    Vector2Int uv_to_px_coords(float u, float v, int mip, int atlasWidth, int atlasHeight) {
-        int widthAtLevel = atlasWidth/2 >> mip;
-        int heightAtLevel = atlasHeight >> mip;
-
-        int x = (int)(widthAtLevel * u);
-        int y = (int)(heightAtLevel * v);
-
-        int offset = atlasWidth - 2 * widthAtLevel;
-
-        return new Vector2Int(x + offset, y);
-
-    }
-
-    Vector3 px_to_uv_coords(int x, int y, int atlasWidth, int atlasHeight) {
-        int mip = 0;
-
-        for (int w = atlasWidth / 2; x > w; w /= 2) {
-            mip += (x > w) ? 1 : 0;
-            x -= w;
-        }
-
-        int widthAtLevel = atlasWidth / 2 >> mip;
-        int heightAtLevel = atlasHeight >> mip;
-
-        int offset = atlasWidth - 2 * widthAtLevel;
-
-        Debug.Log(x + " | " + offset);
-
-        //x -= offset;
-
-        float u = (float)x / widthAtLevel;
-        float v = (float)y / heightAtLevel;
-
-        return new Vector3(u, v, mip);
-
-    }
+   
 }

@@ -8,10 +8,9 @@ public class Test : MonoBehaviour {
     public RenderTexture tileMask;
     public RenderTexture worldPos;
 
-    public RenderTexture baycentricCoords;
-    public RenderTexture vertexIds;
-
     public RenderTexture finalImage;
+    
+    public List<MyPipeline.ObjData> sceneObjects;
 
     //public Matrix4x4 locToWorld;
     //public List<Vector3> vertices;
@@ -19,10 +18,10 @@ public class Test : MonoBehaviour {
     private void Update() {
         rts = MyPipeline.rts;
         tileMask = MyPipeline.tileMaskCopy;
-        baycentricCoords = MyPipeline.baycentricCoords;
-        vertexIds = MyPipeline.vertexIds;
         finalImage = MyPipeline.finalImage;
         worldPos = MyPipeline.worldPosMapCopy;
+
+        sceneObjects = MyPipeline.sceneObjects;
 
         /*GameObject g = GameObject.FindGameObjectWithTag("RenderObject");
 
