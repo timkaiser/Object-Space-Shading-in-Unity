@@ -1,14 +1,12 @@
-﻿// Each #kernel tells which function to compile; you can have many kernels
+﻿//this compute shader takes the rendered uv and mip map coordinates of the first pass and writes a tilemask of wich parts of the texture gets actually rendered
+
 #pragma kernel CSMain
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
-Texture2D<int> ID;
-Texture2D<float4> WorldPos;
-Texture2D<float3> Normal;
+Texture2D<int2> IDandMip;	
 Texture2D<float2> UV;
 RWTexture2D<float3> Output;
 
+//takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
 uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
 	uint widthAtLevel = atlasWidth / 2 >> mip;
 	uint heightAtLevel = atlasHeight >> mip;
@@ -21,19 +19,17 @@ uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
 
 }
 
+//main part of compute shader
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-	float4 worldPos = WorldPos[id.xy];
-	float3 normal = Normal[id.xy];
+	int2 idAndMip = IDandMip[id.xy];
 	float2 uv = UV[id.xy];
 
 	uint width, height;
 	Output.GetDimensions(width, height);
 
-	uint mipLevel = worldPos.w;
-
-	uint2 xy = uv_to_px_coords(uv, mipLevel, width, height);
+	uint2 xy = uv_to_px_coords(uv, idAndMip.y, width, height);
 
 	Output[xy] = float3(1,0,0);
 }

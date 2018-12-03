@@ -1,4 +1,5 @@
-﻿Shader "Custom/ReadBack"
+﻿//This shader takes the tilemap with the world position and projects it back onto the object
+Shader "Custom/ReadBack"
 {
 	Properties
 	{
@@ -52,9 +53,10 @@
 				float2 dy = abs(ddy(i.uv));
 				uint mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
 				uint powMipLevel = pow(2, mipLevel);
-				float2 atlasOffset = float2(1.0-(1.0/ powMipLevel),0);
+
+				float2 atlasOffset = float2(1.0-(1.0/ powMipLevel),0);		//offset in texture atlas (for mipmap) in uv coordinates (btw. 0 and 1)
 				float2 uv = i.uv / powMipLevel;
-				uv.x /= 2;
+				uv.x /= 2;  //because the atlas is twice the width of the texture
 
 				return tex2D(_TextureAtlas, atlasOffset + uv);
 			}

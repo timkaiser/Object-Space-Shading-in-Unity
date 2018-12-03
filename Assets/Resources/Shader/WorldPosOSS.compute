@@ -1,4 +1,4 @@
-﻿// Each #kernel tells which function to compile; you can have many kernels
+﻿// This computeshader takes the tilemask, baycentric coordinates/vertex ids, and the vertex positions andcreates a tile map with the world postions 
 #pragma kernel CSMain
 
 Matrix localToWorldMatrix;
@@ -8,6 +8,7 @@ Texture2D<float3> baycentCoords;
 RWStructuredBuffer<float3> vertexPositions;
 RWTexture2D<float3> Output;
 
+//this takes the pixel position in the texture atlas and calculates the uv and mipmap coordinates
 float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
 	uint mip = 0;
 
@@ -30,7 +31,7 @@ float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-	if (tileMask[(uint2)(id.xy / 8)].x == 0) { return; }
+	if (tileMask[(uint2)(id.xy / 8)].x == 0) {return; }
 
 	uint atlasWidth, atlasHeight;
 	Output.GetDimensions(atlasWidth, atlasHeight);
@@ -54,5 +55,6 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
 
 	Output[id.xy] = worldPos;
+	
 
 }

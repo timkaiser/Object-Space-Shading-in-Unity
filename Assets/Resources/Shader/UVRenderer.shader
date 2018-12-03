@@ -1,13 +1,9 @@
 ﻿Shader "Custom/UVRenderer"
-{
-	Properties
-	{
-	}
+{	
+	//This shader outputs the baycentric coordinates and the vertex ids of the mesh of a single object 
+	Properties{}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" }
-		LOD 100
-
 		Pass
 		{
 			CGPROGRAM
@@ -18,71 +14,66 @@
 
 			#include "UnityCG.cginc"
 
-			// Structs ================================================================
-			struct appdata
-			{
+			// Structs for in-/output ================================================================
+			struct appdata{  //vert in
 				float4 vertex : POSITION;
 				float2 uv : TEXCOORD0;
 				uint vertexId : SV_VertexID;
 			};
 
-			struct v2g
-			{
+			struct v2g{  //vert to geom
 				float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
 				uint vertexId : TEXCOORD1;
 			};
 
 
-			struct g2f
-			{
-				float2 uv : TEXCOORD0;
+			struct g2f{  //geom to frag
 				float4 vertex : SV_POSITION;
 				uint3 vertexIds : TEXCOORD1;
 				float2 baycent: TEXCOORD2;
 			};
 
-			struct fOut
-			{
+			struct fOut{  //frag out
 				float3 baycent : SV_Target0;
 				uint3 vertexIds : SV_Target1;
 			};
 
 			// Shader =================================================================
 			
+			//vertex shader
 			v2g vert (appdata v)
 			{
+				//placing the vertices according to their uv coordinate
 				v2g o;
-				v.vertex = float4(v.uv.xy-0.5, 0, 1.0);	
+				v.vertex = float4(v.uv.xy * 2.0 - 1.0, 0.5, 1.0);	//I really only should need this line, and not the next ones, but removing them doesn't work
 				v.vertex = mul(UNITY_MATRIX_V, v.vertex);
 				v.vertex = mul(UNITY_MATRIX_P, v.vertex);
-				o.vertex = float4(v.vertex.xy, 0, 512/512.0); //HOW CAN I AVOID THIS SCALE FACTOR?
+				o.vertex = float4(v.vertex.xy, 0, 1);
 				o.uv = v.uv;
 				o.vertexId = v.vertexId;
 				return o;
 			}
 			
+			//geometry shader
 			[maxvertexcount(3)]
 			void geom(triangle v2g input[3], inout TriangleStream<g2f> tristream) {
 				uint3 ids = uint3(input[0].vertexId, input[1].vertexId, input[2].vertexId);
 				
 				//vertex 0
 				g2f o;
-				o.uv = input[0].uv;
 				o.vertex = input[0].vertex;
 				o.vertexIds = ids;
 				o.baycent = float2(0, 0);
 				tristream.Append(o);
 
 				//vertex 1
-				o.uv = input[1].uv;
 				o.vertex = input[1].vertex;
 				o.vertexIds = ids;
 				o.baycent = float2(1, 0);
 				tristream.Append(o);
 
 				//vertex 2
-				o.uv = input[2].uv;
 				o.vertex = input[2].vertex;
 				o.vertexIds = ids;
 				o.baycent = float2(0, 1);
@@ -90,6 +81,7 @@
 
 			}
 
+			//fragment shader
 			fOut frag (g2f i)
 			{
 				fOut o;

@@ -2,7 +2,6 @@
 {
 	Properties
 	{
-		_MainTex("Texture", 2D) = "white" {}
 		_ID("ID", Int) = 0
 		_TextureSize("TextureSize", Int) = 512
 	}
@@ -21,60 +20,51 @@
 					INPUT / OUTPUT STRUCTS
 				  ===============================================================================================*/
 
-				struct appdata
+				struct appdata  //vert in
 				{
 					float4 vertex : POSITION;
 					float2 uv : TEXCOORD0;
-					float3 normal : NORMAL;
 				};
 
-				struct v2f
+				struct v2f   //vert to frag
 				{
 					float2 uv : TEXCOORD0;
 					float4 vertex : SV_POSITION;
-					float3 normal : NORMAL;
-					float3 worldPos : POSITON;
 				};
 
 				//Output of fragment shader
-				struct fragOut {
-					int id : SV_Target0;
+				struct fOut {
+					int2 idAndMip : SV_Target0;
 					float2 uv : SV_Target1;
-					float4 worldPos : SV_Target2;
-					float3 normal : SV_Target3;
 				};
 				/*===============================================================================================
 					SHADER
 				  ===============================================================================================*/
 
-				sampler2D _MainTex;
-				float4 _MainTex_ST;
 				int _ID;
 				int _TextureSize;
 
+				//vertex shader
 				v2f vert(appdata v)
 				{
 					v2f o;
 					o.vertex = UnityObjectToClipPos(v.vertex);
-					o.uv = v.uv;//TRANSFORM_TEX(v.uv, _MainTex);
-					o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-					o.normal = normalize(mul((float3x3)UNITY_MATRIX_MV, v.normal));;
+					o.uv = v.uv;
 
 					return o;
 				};
 
-				fragOut frag(v2f i)
+				//fragment shader
+				fOut frag(v2f i)
 				{
-					fragOut o;
-					o.id = _ID;
+					fOut o;
+					o.idAndMip.x = _ID;
 					o.uv = i.uv;
-					o.worldPos.xyz = i.worldPos;
-					o.normal = i.normal;
 
 					float2 dx = abs(ddx(i.uv));
 					float2 dy = abs(ddy(i.uv));
 					int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
-					o.worldPos.w = mipLevel;
+					o.idAndMip.y = mipLevel;
 
 					return o;
 				}
