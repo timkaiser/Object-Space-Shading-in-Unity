@@ -135,19 +135,7 @@ public class MyPipeline : RenderPipeline {
         cameraBuffer.BeginSample("UV Renderer");
 
         //render only once at the beginning
-        if (baycentricCoords == null || vertexIds == null) {
-            //Set camera to pass through ________________________________________________________________________________
-            bool isCamOrth = camera.orthographic;
-            float camNear = camera.nearClipPlane;
-            float camSize = camera.orthographicSize;
-            Vector3 camPos = camera.transform.position;
-            Quaternion camRot = camera.transform.rotation;
-            camera.orthographic = true;
-            camera.nearClipPlane = 0;
-            camera.orthographicSize = 1;
-            camera.transform.SetPositionAndRotation(Vector3.zero, Quaternion.EulerRotation(0, 0, 0));
-
-            //Initilize RenderTexture for baycentric coordinate/vertex id _______________________________________________
+        if (baycentricCoords == null || vertexIds == null) {//Initilize RenderTexture for baycentric coordinate/vertex id _______________________________________________
             baycentricCoords = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
             baycentricCoords.filterMode = FilterMode.Point;
             baycentricCoords.anisoLevel = 0;
@@ -193,12 +181,6 @@ public class MyPipeline : RenderPipeline {
             context.Submit();
 
             #endregion
-
-            //reset camera _______________________________________________________________________________________________
-            camera.orthographic = isCamOrth;
-            camera.nearClipPlane = camNear;
-            camera.orthographicSize = camSize;
-            camera.transform.SetPositionAndRotation(camPos, camRot);
 
             //reset render target
             Graphics.SetRenderTarget(null);

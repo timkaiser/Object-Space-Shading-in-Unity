@@ -6,6 +6,8 @@
 	{
 		Pass
 		{
+			Cull Off
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -46,10 +48,7 @@
 			{
 				//placing the vertices according to their uv coordinate
 				v2g o;
-				v.vertex = float4(v.uv.xy * 2.0 - 1.0, 0.5, 1.0);	//I really only should need this line, and not the next ones, but removing them doesn't work
-				v.vertex = mul(UNITY_MATRIX_V, v.vertex);
-				v.vertex = mul(UNITY_MATRIX_P, v.vertex);
-				o.vertex = float4(v.vertex.xy, 0, 1);
+				o.vertex = float4(v.uv.xy * 2.0 - 1.0, 0.5, 1.0);
 				o.uv = v.uv;
 				o.vertexId = v.vertexId;
 				return o;
