@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ObjExporter.cs" />
     <Compile Include="Assets\RenderPipeline\MyPipeline.cs" />
     <Compile Include="Assets\RenderPipeline\MyPipelineAsset.cs" />
     <Compile Include="Assets\Resources\Scripts\Cam.cs" />

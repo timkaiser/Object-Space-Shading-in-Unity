@@ -4,7 +4,7 @@
 	{
 		_ID("ID", Int) = 0
 		_TextureSize("TextureSize", Int) = 512
-		_TextureAtlas("_TextureAtlas", 2D) = "" {}
+		_TextureArray("_TextureArray", 2DArray) = "" {}
 	}
 	
 	SubShader
@@ -42,7 +42,7 @@
 
 			int _ID;
 			int _TextureSize;
-			sampler2D _TextureAtlas;
+			UNITY_DECLARE_TEX2DARRAY(_TextureArray);
 
 			//vertex shader
 			v2f vert(appdata_base v){
@@ -56,31 +56,24 @@
 
 			//fragment shader
 			fOut frag(v2f i){
+				float2 dx = abs(ddx(i.uv));
+				float2 dy = abs(ddy(i.uv));
+				int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+
 				#if defined(_FIRST_PASS) //FIRST PASS
 				fOut o;
 				o.idAndMip.x = _ID;
 				o.uv = i.uv;
 				o.worldPos = i.worldPos;
-
-				float2 dx = abs(ddx(i.uv));
-				float2 dy = abs(ddy(i.uv));
-				int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
 				o.idAndMip.y = mipLevel;
 
 				return o;
 
 				#else	//READ BACK
-				float2 dx = abs(ddx(i.uv));
-				float2 dy = abs(ddy(i.uv));
-				uint mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
-				uint powMipLevel = pow(2, mipLevel);
-
-				float2 atlasOffset = float2(1.0 - (1.0 / powMipLevel), 0);		//offset in texture atlas (for mipmap) in uv coordinates (btw. 0 and 1)
+				int powMipLevel = pow(2, mipLevel);
 				float2 uv = i.uv / powMipLevel;
-				uv.x /= 2.0;  //because the atlas is twice the width of the texture
 
-				fOut o = {tex2D(_TextureAtlas, atlasOffset + uv) };
-				return o;
+				return (fOut) UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(uv, mipLevel));
 				#endif
 			}
 			ENDCG
