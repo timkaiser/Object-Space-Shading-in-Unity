@@ -11,6 +11,7 @@ public class Rotation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        this.transform.Rotate(Vector3.up * speed*Time.deltaTime);
-	}
+       this.transform.Rotate(Vector3.up * speed*Time.deltaTime);
+       this.transform.Rotate(Vector3.left * speed * Time.deltaTime * 2);
+    }
 }

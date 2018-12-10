@@ -5,6 +5,7 @@
 Texture2D<int2> IDandMip;	
 Texture2D<float2> UV;
 RWTexture2D<float3> Output;
+int ID;
 
 //takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
 uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
@@ -25,6 +26,8 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 {
 	int2 idAndMip = IDandMip[id.xy];
 	float2 uv = UV[id.xy];
+
+	if (idAndMip.x != ID) { return; }
 
 	uint width, height;
 	Output.GetDimensions(width, height);

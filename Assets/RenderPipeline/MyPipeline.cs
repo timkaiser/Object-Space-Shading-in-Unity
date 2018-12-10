@@ -14,27 +14,16 @@ public class MyPipeline : RenderPipeline {
 
     Texture texture;
     /* Public static for debugging reasons*/
-    #if DEBUG
-    public static RenderTexture tileMaskCopy;
-    public static RenderTexture worldPosMapCopy;
-    public static RenderTexture[] rts;
-    public static RenderTexture[] loadedTexture;
-    public static RenderTexture baycentricCoords;
-    public static RenderTexture vertexIds;
+#if DEBUG
+    public static RenderTexture idMipCopy;
+    public static RenderTexture uvCopy;
+    public static RenderTexture worldPosCopy;
     public static RenderTexture finalImage;
 
 #else
-    RenderTexture[] rts;    
-    RenderTexture baycentricCoords;
-    RenderTexture vertexIds;
     RenderTexture finalImage;
-    RenderTexture[] loadedTexture;
 #endif
 
-
-    RenderBuffer[] colorBuffers;
-    RenderBuffer depthBuffer;
-    
     public const int MIP_MAP_COUNT = 9;
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
 
@@ -44,37 +33,23 @@ public class MyPipeline : RenderPipeline {
     private ComputeShader worldPosShader;
     private int worldPosKernel;
 
+
+    //scene objects
+    [System.Serializable]
+    public class ObjData {
+        public int id;
+        public GameObject obj;
+        public RenderTexture baycentricCoords;
+        public RenderTexture vertexIds;
+        public RenderTexture tileMask;
+        public RenderTexture worldPosMap;
+    }
+
+    [SerializeField]
+    public static List<ObjData> sceneObjects;
+
     //### Constructor ##############################################################################################################
     public MyPipeline() {
-        //Find Camera
-        Camera cam = GameObject.FindObjectOfType<Camera>();
-        int width = cam.pixelWidth;
-        int height = cam.pixelHeight;
-
-        //load texture
-        texture = (Texture)Resources.Load("Textures/earth_daymap");
-
-
-        //Initialize Render Textures
-        rts = new RenderTexture[2] {
-            new RenderTexture(width, height, 0, RenderTextureFormat.RGInt), //ID and Mip Map
-            new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat), //UV
-        };
-
-        for (int i = 0; i < rts.Length; i++) {
-            rts[i].filterMode = FilterMode.Point;
-            rts[i].anisoLevel = 0;
-            rts[i].Create();
-        }
-
-        //get color buffers from rendertextures
-        colorBuffers = new RenderBuffer[2] { rts[0].colorBuffer, rts[1].colorBuffer };
-
-        //create depth buffer
-        RenderTexture depthBufferTexture = new RenderTexture(width, height, 32, RenderTextureFormat.Depth);
-        depthBufferTexture.Create();
-        depthBuffer = depthBufferTexture.depthBuffer;
-
         //compute shader
         tileMaskShader = (ComputeShader)Resources.Load("Shader/UVCoordReader");
         tileMaskKernel = tileMaskShader.FindKernel("CSMain");
@@ -82,23 +57,24 @@ public class MyPipeline : RenderPipeline {
         worldPosShader = (ComputeShader)Resources.Load("Shader/WorldPosOSS");
         worldPosKernel = worldPosShader.FindKernel("CSMain");
 
-        #if DEBUG
-        tileMaskCopy = new RenderTexture(MAX_TEXTURE_SIZE / 4, MAX_TEXTURE_SIZE / 8, 0, RenderTextureFormat.R8);
-        worldPosMapCopy = new RenderTexture(MAX_TEXTURE_SIZE*2, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
-        #endif
 
-        //fianl Image
-        finalImage = new RenderTexture(width, height, 32, RenderTextureFormat.ARGBFloat);
-        finalImage.filterMode = FilterMode.Point;
-        finalImage.anisoLevel = 0;
-        finalImage.enableRandomWrite = true;
-        finalImage.Create();
+
+#if DEBUG
+        int width = GameObject.FindObjectOfType<Camera>().pixelWidth;
+        int height = GameObject.FindObjectOfType<Camera>().pixelHeight;
+
+        idMipCopy = new RenderTexture(width, height, 0, RenderTextureFormat.RGInt);
+        uvCopy = new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat);
+        worldPosCopy = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32);
+#endif
     }
 
 
     //### Rendering #######################################################################################################
     //called by unity at the begining
     public override void Render(ScriptableRenderContext renderContext, Camera[] cameras) {
+        if (!Application.isPlaying) { return; }
+
         base.Render(renderContext, cameras);
 
         //call new render methode for every camera
@@ -109,14 +85,9 @@ public class MyPipeline : RenderPipeline {
 
     //called once for every camera
     public void Render(ScriptableRenderContext context, Camera camera) {
-       
-        #region Setup
-        DrawRendererSettings drawSettings;
-        FilterRenderersSettings filterSettings;
-
-        //setup camera
+        //Debug.Log(1/Time.deltaTime);
         context.SetupCameraProperties(camera);
-
+        
         //cull objects not on screen
         #region culling
         ScriptableCullingParameters cullingParameters;
@@ -126,47 +97,120 @@ public class MyPipeline : RenderPipeline {
 
         CullResults.Cull(ref cullingParameters, context, ref cull);
 
-        
-        #endregion
 
         #endregion
+
+
+        //UV Renderer __________________________________________________________________________________________________
+        if (sceneObjects == null) {
+            sceneObjects = uvRenderer(context, camera);
+        }
+
+        //First pass ___________________________________________________________________________________________________
+        RenderTexture[] rts = firstPass(context, camera);
         
-        #region UV Renderer
-        cameraBuffer.BeginSample("UV Renderer");
-
-        //render only once at the beginning
-        if (baycentricCoords == null || vertexIds == null) {//Initilize RenderTexture for baycentric coordinate/vertex id _______________________________________________
-            baycentricCoords = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
-            baycentricCoords.filterMode = FilterMode.Point;
-            baycentricCoords.anisoLevel = 0;
-            baycentricCoords.Create();
-
-            vertexIds = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 24, RenderTextureFormat.ARGBInt);
-            vertexIds.filterMode = FilterMode.Point;
-            vertexIds.anisoLevel = 0;
-            vertexIds.Create();
+        //Compute shader _______________________________________________________________________________________________
+        foreach (ObjData obj in sceneObjects) {
+            if(obj.tileMask != null) { obj.tileMask.Release(); }
+            if (obj.worldPosMap != null) { obj.worldPosMap.Release(); }
+            obj.tileMask = runTileMaskShader(obj.id,rts[0], rts[1]);
+            obj.worldPosMap = runWorldPosMapShader(obj.tileMask, obj);
+        }
 
 
-            cameraBuffer.Clear();
+        //Read-Back ____________________________________________________________________________________________________
+        finalImage = readBack(context, camera);
 
-            //set shader _________________________________________________________________________________________________
+        Graphics.Blit(finalImage, camera.activeTexture);
+        
+        #if DEBUG
+
+        Graphics.Blit(rts[0], idMipCopy);
+        Graphics.Blit(rts[1], uvCopy);
+        Graphics.Blit(rts[2], worldPosCopy);
+        #endif
+
+        //release rendertextures not in use
+        Graphics.SetRenderTarget(null);
+        
+        rts[0].Release();
+        rts[1].Release();
+        finalImage.Release();
+        
+    }
+
+    //### main render methodes #############################################################################################################
+
+    List<ObjData> uvRenderer(ScriptableRenderContext context, Camera camera) {
+        //setup
+        DrawRendererSettings drawSettings;
+        FilterRenderersSettings filterSettings;
+
+        //initialize list
+        List<ObjData> sceneObjects = new List<ObjData>();
+
+        int id = 0;
+        foreach (MeshFilter mesh in GameObject.FindObjectsOfType<MeshFilter>()) {
+            int camCullMask = camera.cullingMask;
+            camera.cullingMask = 1 << 9;
+            context.SetupCameraProperties(camera);
+
+            
+
+
+            ObjData obj = new ObjData();
+            obj.obj = mesh.gameObject;
+            obj.id = id;
+            id++;
+            
+            int objLayer = obj.obj.layer;
+            obj.obj.layer = 9;
+
+            #region culling
+            ScriptableCullingParameters cullingParameters;
+            if (!CullResults.GetCullingParameters(camera, out cullingParameters)) {
+                return null;
+            }
+
+            CullResults.Cull(ref cullingParameters, context, ref cull);
+
+
+            #endregion
+            
+
+            obj.obj.GetComponent<Renderer>().material.SetInt("_ID", obj.id);
+
+            //Initilize RenderTexture for baycentric coordinate/vertex id
+            obj.baycentricCoords = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 0, RenderTextureFormat.ARGBFloat);
+            obj.baycentricCoords.filterMode = FilterMode.Point;
+            obj.baycentricCoords.anisoLevel = 0;
+            obj.baycentricCoords.Create();
+
+            obj.vertexIds = new RenderTexture(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 24, RenderTextureFormat.ARGBInt);
+            obj.vertexIds.filterMode = FilterMode.Point;
+            obj.vertexIds.anisoLevel = 0;
+            obj.vertexIds.Create();
+
+
+            //cameraBuffer.Clear();
+
             Shader uvRenderer = Shader.Find("Custom/UVRenderer");
             Material uvRendererMaterial = new Material(uvRenderer);
 
 
             //set render target
-            RenderBuffer[] cBuffer = new RenderBuffer[2] { baycentricCoords.colorBuffer, vertexIds.colorBuffer };
+            RenderBuffer[] cBuffer = new RenderBuffer[2] { obj.baycentricCoords.colorBuffer, obj.vertexIds.colorBuffer };
 
-            camera.SetTargetBuffers(cBuffer, baycentricCoords.depthBuffer);
-            //clear render target ________________________________________________________________________________________
+            camera.SetTargetBuffers(cBuffer, obj.baycentricCoords.depthBuffer);
+            //Graphics.SetRenderTarget(obj.baycentricCoords);
+
             #region clearing
-            cameraBuffer.ClearRenderTarget(true, true, new Color(0,0,0,0));
+            cameraBuffer.ClearRenderTarget(true, true, new Color(0, 0, 0, 0));
 
             context.ExecuteCommandBuffer(cameraBuffer);
             cameraBuffer.Clear();
             #endregion
 
-            //draw _______________________________________________________________________________________________________
             #region drawing
             //setup settings for rendering unlit opaque materials
             drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
@@ -175,27 +219,55 @@ public class MyPipeline : RenderPipeline {
             filterSettings = new FilterRenderersSettings(true);
 
             drawSettings.SetOverrideMaterial(uvRendererMaterial, 0);
-            
+
+            //draw unlit opaque materials
             context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
+            #endregion
             context.Submit();
 
-            #endregion
+            obj.obj.layer = objLayer;
+            camera.cullingMask = camCullMask;
 
-            //reset render target
+            sceneObjects.Add(obj);
+
             Graphics.SetRenderTarget(null);
         }
 
-        cameraBuffer.EndSample("UVRenderer");
-        #endregion
-        
+        return sceneObjects;
+    }
+
+    RenderTexture[] firstPass(ScriptableRenderContext context, Camera camera) {
         #region First Pass
+
+        DrawRendererSettings drawSettings;
+        FilterRenderersSettings filterSettings;
+
+        int width = camera.pixelWidth;
+        int height = camera.pixelHeight;
+        
+        //Initialize Render Textures
+        RenderTexture[] rts = new RenderTexture[3] {
+            new RenderTexture(width, height, 0, RenderTextureFormat.RGInt), //ID and Mip Map
+            new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat), //UV
+            new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //UV
+        };
+
+        for (int i = 0; i < rts.Length; i++) {
+            rts[i].filterMode = FilterMode.Point;
+            rts[i].anisoLevel = 0;
+            rts[i].Create();
+        }
+        
+        //create depth buffer
+        RenderTexture depthBufferTexture = new RenderTexture(width, height, 32, RenderTextureFormat.Depth);
+        depthBufferTexture.Create();
 
         //sample call for frame debugger
         cameraBuffer.BeginSample("First Pass");
 
         //set render target
-        camera.SetTargetBuffers(colorBuffers, depthBuffer);
+        camera.SetTargetBuffers(new RenderBuffer[3] { rts[1].colorBuffer, rts[0].colorBuffer, rts[2].colorBuffer }, depthBufferTexture.depthBuffer);
 
         //clear render target
         #region clearing
@@ -203,8 +275,9 @@ public class MyPipeline : RenderPipeline {
         cameraBuffer.ClearRenderTarget(
             (clearFlags & CameraClearFlags.Depth) != 0,
             (clearFlags & CameraClearFlags.Color) != 0,
-            camera.backgroundColor
+            camera.backgroundColor//new Color(0, 0, 0, 0)
         );
+
 
 
         context.ExecuteCommandBuffer(cameraBuffer);
@@ -216,12 +289,12 @@ public class MyPipeline : RenderPipeline {
         //setup settings for rendering unlit opaque materials
         drawSettings = new DrawRendererSettings(camera, new ShaderPassName("SRPDefaultUnlit"));
         drawSettings.sorting.flags = SortFlags.CommonOpaque;
-   
+
         filterSettings = new FilterRenderersSettings(true);
 
         //draw unlit opaque materials
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
-            
+
         #endregion
 
         cameraBuffer.EndSample("First Pass");
@@ -229,31 +302,91 @@ public class MyPipeline : RenderPipeline {
         context.Submit();
         #endregion
 
-        #region Compute Shader
-        var tileMask = runTileMaskShader(camera.pixelWidth,camera.pixelHeight);
+        Graphics.SetRenderTarget(null);
+        depthBufferTexture.Release();
 
-        var worldPosMap = runWorldPosMapShader(tileMask);
-        #endregion
+        return rts;
+    }
 
-        #region Read-Back
+    RenderTexture runTileMaskShader(int objID, RenderTexture IDandMip, RenderTexture uv) {
+        Graphics.SetRenderTarget(null);
 
-        cameraBuffer.BeginSample("Read Back");
+        //compue shader parameters
+        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE / 8, RenderTextureFormat.R8);
+
+        tileMaskShader.SetTexture(tileMaskKernel, "Output", result);
+        tileMaskShader.SetTexture(tileMaskKernel, "IDandMip", IDandMip);
+        tileMaskShader.SetTexture(tileMaskKernel, "UV", uv);
+        tileMaskShader.SetInt("ID", objID);
+
+        //Call compute shader
+        tileMaskShader.Dispatch(tileMaskKernel, IDandMip.width / 8, IDandMip.height / 8, 1);
+
+        return result;
+    }
+
+    RenderTexture runWorldPosMapShader(RenderTexture tileMask, ObjData obj) {
+        //get gameObject
+        Vector3[] vertices = GetVertices(obj.obj);
+
+        //compute shader parameters
+        ComputeBuffer vertexBuffer = new ComputeBuffer(vertices.Length, sizeof(float) * 3);
+        vertexBuffer.SetData(vertices);
+
+        Graphics.SetRenderTarget(null);
+        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat);
+
+        worldPosShader.SetMatrix("localToWorldMatrix", obj.obj.GetComponent<Renderer>().localToWorldMatrix);
+        worldPosShader.SetTexture(worldPosKernel, "tileMask", tileMask);
+        worldPosShader.SetTexture(worldPosKernel, "vertexIds", obj.vertexIds);
+        worldPosShader.SetTexture(worldPosKernel, "baycentCoords", obj.baycentricCoords);
+        worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", vertexBuffer);
+        worldPosShader.SetTexture(worldPosKernel, "Output", result);
+
+        //Call compute shader
+        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 8, MAX_TEXTURE_SIZE / 8, 1);
+
+        vertexBuffer.Release();
+        return result;
+
+    }
+
+    RenderTexture readBack(ScriptableRenderContext context, Camera camera) {
 
         cameraBuffer.Clear();
 
-        //set shader
-        Shader readBack = Shader.Find("Custom/ReadBack");
-        Material secondPassMaterial = new Material(readBack);
-        secondPassMaterial.SetTexture("_TextureAtlas", worldPosMap);
+        foreach (ObjData obj in sceneObjects) {
+            Material mat = obj.obj.GetComponent<Renderer>().material;
+            mat.SetTexture("_TextureAtlas", obj.worldPosMap);
+            mat.DisableKeyword("_FIRST_PASS");
+            mat.EnableKeyword("_READ_BACK");
+        }
+
+        DrawRendererSettings drawSettings;
+        FilterRenderersSettings filterSettings;      
+        
+        #region culling
+        ScriptableCullingParameters cullingParameters;
+        if (!CullResults.GetCullingParameters(camera, out cullingParameters)) {
+            return null;
+        }
+
+        CullResults.Cull(ref cullingParameters, context, ref cull);
+
+
+        #endregion
+
+        //fianl Image
+        RenderTexture finalImage = new RenderTexture(camera.pixelWidth, camera.pixelHeight, 32, RenderTextureFormat.ARGBFloat);
+        finalImage.filterMode = FilterMode.Point;
+        finalImage.anisoLevel = 0;
+        finalImage.enableRandomWrite = true;
+        finalImage.Create();
 
         Graphics.SetRenderTarget(finalImage);
 
         #region clearing
-        cameraBuffer.ClearRenderTarget(
-            (clearFlags & CameraClearFlags.Depth) != 0,
-            (clearFlags & CameraClearFlags.Color) != 0,
-            camera.backgroundColor
-        );
+        cameraBuffer.ClearRenderTarget(true, true, camera.backgroundColor);
 
 
         context.ExecuteCommandBuffer(cameraBuffer);
@@ -268,86 +401,32 @@ public class MyPipeline : RenderPipeline {
 
         filterSettings = new FilterRenderersSettings(true);
 
+        
 
-        drawSettings.SetOverrideMaterial(secondPassMaterial, 0);
 
         //draw unlit opaque materials
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
 
-        cameraBuffer.EndSample("Read Back");
         #endregion
-
 
         context.Submit();
 
-        //release rendertextures not in use
-        tileMask.Release();
-        worldPosMap.Release();
-        
+        foreach (ObjData obj in sceneObjects) {
+            Material mat = obj.obj.GetComponent<Renderer>().material;
+            mat.EnableKeyword("_FIRST_PASS");
+            mat.DisableKeyword("_READ_BACK");
+        }
 
-        Graphics.Blit(finalImage, camera.activeTexture);
-        
-        #endregion
+        return finalImage;
     }
 
     //### other methodes #############################################################################################################
 
-    RenderTexture runTileMaskShader(int width, int height) {
-        Graphics.SetRenderTarget(null);
-
-        //compue shader parameters
-        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE/8, RenderTextureFormat.R8);
-
-        tileMaskShader.SetTexture(tileMaskKernel, "Output", result);
-        tileMaskShader.SetTexture(tileMaskKernel, "IDandMip", rts[0]);
-        tileMaskShader.SetTexture(tileMaskKernel, "UV", rts[1]);
-
-        //Call compute shader
-        tileMaskShader.Dispatch(tileMaskKernel, width / 8, height / 8, 1);
-
-        #if DEBUG
-        //debug for cs output
-        Graphics.CopyTexture(result, tileMaskCopy);
-        #endif
-        return result;
-    }
-
-    RenderTexture runWorldPosMapShader(RenderTexture tileMask) {
-        //get gameObject
-        GameObject obj = GameObject.FindGameObjectWithTag("RenderObject"); //finds single game object (to be changend in future versions for multiple objects)
-        Vector3[] vertices = GetVertices(obj);
-
-        //compute shader parameters
-        ComputeBuffer vertexBuffer = new ComputeBuffer(vertices.Length, sizeof(float)*3);
-        vertexBuffer.SetData(vertices);
-
-        Graphics.SetRenderTarget(null);
-        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat);
-
-        worldPosShader.SetMatrix("localToWorldMatrix", obj.GetComponent<Renderer>().localToWorldMatrix);
-        worldPosShader.SetTexture(worldPosKernel, "tileMask", tileMask);
-        worldPosShader.SetTexture(worldPosKernel, "vertexIds", vertexIds);
-        worldPosShader.SetTexture(worldPosKernel, "baycentCoords", baycentricCoords);
-        worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", vertexBuffer);
-        worldPosShader.SetTexture(worldPosKernel, "Output", result);
-
-        //Call compute shader
-        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 8, MAX_TEXTURE_SIZE / 8, 1);
-
-        #if DEBUG
-        //debug for cs output
-        Graphics.CopyTexture(result, worldPosMapCopy);
-        #endif
-
-        vertexBuffer.Release();
-        return result;
-
-    }
 
     //returns rendertexture
     RenderTexture CreateIntermediateCSTarget(int size, RenderTextureFormat rtFormat) {
-        var result = new RenderTexture(size*2, size, 0, rtFormat, RenderTextureReadWrite.Default);
+        var result = new RenderTexture(size * 2, size, 0, rtFormat, RenderTextureReadWrite.Default);
         result.enableRandomWrite = true;
         result.filterMode = FilterMode.Point;
         result.anisoLevel = 0;
@@ -361,7 +440,7 @@ public class MyPipeline : RenderPipeline {
         MeshFilter[] mfs = go.GetComponentsInChildren<MeshFilter>();
         List<Vector3> vList = new List<Vector3>();
         foreach (MeshFilter mf in mfs) {
-            vList.AddRange(mf.sharedMesh.vertices);
+            vList.AddRange(mf.mesh.vertices);
         }
         return vList.ToArray();
     }

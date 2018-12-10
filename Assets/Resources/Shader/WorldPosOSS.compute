@@ -32,7 +32,6 @@ float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
 	if (tileMask[(uint2)(id.xy / 8)].x == 0) {return; }
-
 	uint atlasWidth, atlasHeight;
 	Output.GetDimensions(atlasWidth, atlasHeight);
 
@@ -51,10 +50,9 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 		+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
 		+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
 
-	float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
-
+	float4 worldPos = mul(localToWorldMatrix, float4(localPos.x, localPos.y, localPos.z, 1)); //this minus should not be there
 
 	Output[id.xy] = worldPos;
-	
+
 
 }
