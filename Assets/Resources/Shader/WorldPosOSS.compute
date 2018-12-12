@@ -17,16 +17,15 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	for (uint mipLevel = 0; mipLevel < elements; mipLevel++) {
 		uint widthAtLevel = width >> mipLevel;
 		uint heightAtLevel = height >> mipLevel;
-		if (id.x < widthAtLevel && id.y < widthAtLevel && tileMask[uint3((uint2)(id.xy / 8), mipLevel)].x == 1) {
+		if (id.x <= widthAtLevel && id.y <= heightAtLevel && tileMask[uint3(id.xy / 8, mipLevel)].x == 1) {
 			uint2 xy = (uint2)(id.xy * pow(2, mipLevel));
 
 			float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
 				+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
 				+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
 
-			float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
+			Output[uint3(id.xy, mipLevel)] = baycentCoords[xy] != float3(0,0,0)?mul(localToWorldMatrix, float4(localPos, 1)):float3(1,0,1);
 
-			Output[uint3(id.xy, mipLevel)] = worldPos;
 		}
 	}
 }

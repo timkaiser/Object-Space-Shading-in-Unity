@@ -136,7 +136,7 @@ public class MyPipeline : RenderPipeline {
         Graphics.Blit(rts[0], idMipCopy);
         Graphics.Blit(rts[1], uvCopy);
         Graphics.Blit(rts[2], worldPosCopy);
-        Graphics.CopyTexture(sceneObjects[0].worldPosMap, 1, 0, worldPosCopy, 0, 0);
+        Graphics.CopyTexture(sceneObjects[0].worldPosMap, 0, 0, worldPosCopy, 0, 0);
         #endif
 
         //release rendertextures not in use
@@ -376,7 +376,7 @@ public class MyPipeline : RenderPipeline {
 
         foreach (ObjData obj in sceneObjects) {
             Material mat = obj.obj.GetComponent<Renderer>().material;
-            mat.SetTexture("_TextureAtlas", obj.worldPosMap);
+            mat.SetTexture("_TextureArray", obj.worldPosMap);
             mat.DisableKeyword("_FIRST_PASS");
             mat.EnableKeyword("_READ_BACK");
         }

@@ -1,8 +1,16 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 2 plat 4 at UVCoordReader.compute(22): undeclared identifier 'worldPos'
-  api=4 insize=774 outsize=0 ok=0
+  error: 2 plat 4 at WorldPosOSS.compute(23): if statement conditional expressions must evaluate to a scalar
+  error: 1 plat 4 at WorldPosOSS.compute(30): implicit truncation of vector type
+  api=4 insize=1235 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 2 plat 4 at WorldPosOSS.compute(29): undeclared identifier 'y'
+  api=4 insize=1189 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -13,6 +21,64 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 2 plat 4 at WorldPosOSS.compute(26): cannot implicitly convert from 'const uint2' to 'const uint3'
+  api=4 insize=1594 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 2 plat 4 at WorldPosOSS.compute(23): cannot implicitly convert from 'const uint2' to 'const uint3'
+  api=4 insize=1340 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

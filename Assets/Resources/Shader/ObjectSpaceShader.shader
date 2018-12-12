@@ -17,6 +17,7 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma require 2darray
 			#pragma multi_compile _FIRST_PASS _READ_BACK
 
 			#include "UnityCG.cginc"
@@ -71,9 +72,9 @@
 
 				#else	//READ BACK
 				int powMipLevel = pow(2, mipLevel);
-				float2 uv = i.uv / powMipLevel;
+				float2 uv = i.uv;// / powMipLevel;
 
-				return (fOut) UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(uv, mipLevel));
+				return (fOut) UNITY_SAMPLE_TEX2DARRAY(_TextureArray, float3(uv, 0));
 				#endif
 			}
 			ENDCG

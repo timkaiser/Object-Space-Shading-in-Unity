@@ -48,7 +48,7 @@
 			{
 				//placing the vertices according to their uv coordinate
 				v2g o;
-				o.vertex = float4(v.uv.xy * 2.0 - 1.0, 0.5, 1.0);
+				o.vertex = float4(v.uv.xy * 2.0 - 1.0, 0, 1);
 				o.uv = v.uv;
 				o.vertexId = v.vertexId;
 				return o;
