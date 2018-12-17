@@ -9,30 +9,26 @@ public class Test : MonoBehaviour {
     public RenderTexture uv;
     public RenderTexture worldPosCopy;
 
-
+    
     public RenderTexture finalImage;
-    public RenderTexture[] worldPosMaps;
+
+    public float fps = 0;
 
     public List<MyPipeline.ObjData> sceneObjects;
 
     void Start() {
-        worldPosMaps = new RenderTexture[2];
-        for(int i = 0; i<worldPosMaps.Length;i++) {
-            worldPosMaps[i] = new RenderTexture(1024,512, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Default);
-            worldPosMaps[i].enableRandomWrite = true;
-            worldPosMaps[i].filterMode = FilterMode.Point;
-            worldPosMaps[i].anisoLevel = 0;
-            worldPosMaps[i].Create();
-        }
+       
     }
 
     private void Update() {
+        fps = 1 / Time.deltaTime;
+
         idMip = MyPipeline.idMipCopy;
         uv = MyPipeline.uvCopy;
-        worldPosCopy = MyPipeline.worldPosCopy;
         finalImage = MyPipeline.finalImage;
 
         sceneObjects = MyPipeline.sceneObjects;
+        
     }
     #endif
 }

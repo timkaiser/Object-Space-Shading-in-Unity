@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Spheres.unity
+- path: Assets/Scenes/Sponza.unity
   isLoaded: 1
   isActive: 1

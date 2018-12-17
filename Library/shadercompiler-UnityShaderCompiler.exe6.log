@@ -1,49 +1,10 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=1224 outsize=1093 ok=1
+  error: 2 plat 4 at WorldPosOSS.compute(43): syntax error: unexpected token 'float3'
+  error: 2 plat 4 at WorldPosOSS.compute(45): undeclared identifier 'uvMip'
+  api=4 insize=2612 outsize=0 ok=0
 Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(26): cannot implicitly convert from 'const uint2' to 'const uint3'
-  api=4 insize=1579 outsize=0 ok=0
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(22): if statement conditional expressions must evaluate to a scalar
-  error: 1 plat 4 at WorldPosOSS.compute(27): implicit truncation of vector type
-  api=4 insize=1198 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(22): if statement conditional expressions must evaluate to a scalar
-  error: 1 plat 4 at WorldPosOSS.compute(27): implicit truncation of vector type
-  api=4 insize=1122 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

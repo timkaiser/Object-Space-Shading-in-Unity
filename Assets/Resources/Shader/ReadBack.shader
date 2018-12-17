@@ -4,7 +4,7 @@ Shader "Custom/ReadBack"
 	Properties
 	{
 		[PerRendererData]_TextureAtlas("_TextureAtlas", 2D) = "" {}
-		_TextureSize("TextureSize", Int) = 512
+		_TextureSize("TextureSize", Int) = 8192
 	}
 		SubShader
 	{

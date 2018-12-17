@@ -1,31 +1,68 @@
-﻿// Each #kernel tells which function to compile; you can have many kernels
+﻿// This computeshader takes the tilemask, baycentric coordinates/vertex ids, and the vertex positions andcreates a tile map with the world postions 
 #pragma kernel CSMain
 
 Matrix localToWorldMatrix;
-Texture2DArray<float3> tileMask;
+Texture2D<float3> tileMask;
 Texture2D<uint3> vertexIds;
 Texture2D<float3> baycentCoords;
 RWStructuredBuffer<float3> vertexPositions;
-RWTexture2DArray<float3> Output;
+RWTexture2D<float3> Output;
+
+//this takes the pixel position in the texture atlas and calculates the uv and mipmap coordinates
+float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
+	uint mip = 0;
+
+	for (uint w = atlasWidth / 2; xy.x >= w; w /= 2) {
+		mip += 1;
+		xy.x -= w;
+	}
+
+	uint widthAtLevel = atlasWidth / 2 >> mip;
+	uint heightAtLevel = atlasHeight >> mip;
+
+	uint offset = atlasWidth - 2 * widthAtLevel;
+
+	float2 uv = float2((float)xy.x / widthAtLevel, (float)xy.y / heightAtLevel);
+
+	return float3(uv, mip);
+}
+
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-	uint width, height, elements;
-	Output.GetDimensions(width, height, elements);
+	Output[id.xy] = float3((id.x/(8192*2.0)),id.y/8192.0,0);
 
-	for (uint mipLevel = 0; mipLevel < elements; mipLevel++) {
-		uint widthAtLevel = width >> mipLevel;
-		uint heightAtLevel = height >> mipLevel;
-		if (id.x <= widthAtLevel && id.y <= heightAtLevel && tileMask[uint3(id.xy / 8, mipLevel)].x == 1) {
-			uint2 xy = (uint2)(id.xy * pow(2, mipLevel));
+	if (tileMask[(uint2)(id.xy / 8)].x == 0) { return; }
 
-			float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
-				+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
-				+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
+	uint atlasWidth, atlasHeight;
+	Output.GetDimensions(atlasWidth, atlasHeight);
 
-			Output[uint3(id.xy, mipLevel)] = baycentCoords[xy] != float3(0,0,0)?mul(localToWorldMatrix, float4(localPos, 1)):float3(1,0,1);
+	float3 uvMip = px_to_uv_coords(id.xy, atlasWidth, atlasHeight);
 
-		}
-	}
+	uint widthAtLevel = atlasWidth / 2 >> (uint) uvMip.z;
+	uint heightAtLevel = atlasHeight >> (uint) uvMip.z;
+
+	uint offset = atlasWidth - 2 * widthAtLevel;
+
+
+	if (id.xy.x - offset > widthAtLevel || id.xy.y > heightAtLevel) { return; }
+
+	uint2 xy = uvMip.xy * uint2(atlasWidth / 2, atlasHeight);
+
+	/*xy = (baycentCoords[xy].x != 0 || baycentCoords[xy].y != 0 || baycentCoords[xy].z != 0) ? xy :
+		(baycentCoords[xy + uint2(1, 0)].x != 0 || baycentCoords[xy + uint2(1, 0)].y != 0 || baycentCoords[xy + uint2(1, 0)].z != 0) ? xy + uint2(1, 0) :
+		(baycentCoords[xy + uint2(0, 1)].x != 0 || baycentCoords[xy + uint2(0, 1)].y != 0 || baycentCoords[xy + uint2(0, 1)].z != 0) ? xy + uint2(0, 1) :
+		(baycentCoords[xy + uint2(-1, 0)].x != 0 || baycentCoords[xy + uint2(-1, 0)].y != 0 || baycentCoords[xy + uint2(-1, 0)].z != 0) ? xy + uint2(-1, 0) :
+		(baycentCoords[xy + uint2(0, -1)].x != 0 || baycentCoords[xy + uint2(0, -1)].y != 0 || baycentCoords[xy + uint2(0, -1)].z != 0) ? xy + uint2(0, -1) : xy;
+		*/
+
+	float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
+		+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
+		+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
+
+	float4 worldPos = mul(localToWorldMatrix, float4(localPos.x, localPos.y, localPos.z, 1)); //this minus should not be there
+
+	Output[id.xy] =  worldPos;
+
 }

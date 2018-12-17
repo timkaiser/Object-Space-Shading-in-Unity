@@ -1,15 +1,11 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(29): implicit truncation of vector type
-  api=4 insize=1167 outsize=1737 ok=1
+  api=4 insize=1190 outsize=1005 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(29): implicit truncation of vector type
-  api=4 insize=1192 outsize=1853 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -22,68 +18,6 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(23): cannot implicitly convert from 'const uint2' to 'const uint3'
-  api=4 insize=1342 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(22): cannot implicitly convert from 'uint2' to 'uint3'
-  api=4 insize=1258 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(23): cannot implicitly convert from 'uint2' to 'uint3'
-  api=4 insize=1127 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(23): cannot implicitly convert from 'uint2' to 'uint3'
-  api=4 insize=1134 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

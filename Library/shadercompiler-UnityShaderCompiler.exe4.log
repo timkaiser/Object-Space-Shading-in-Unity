@@ -1,13 +1,11 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(29): implicit truncation of vector type
-  api=4 insize=1170 outsize=1777 ok=1
+  error: 2 plat 4 at WorldPosOSS.compute(34): incorrect number of arguments to numeric-type constructor
+  api=4 insize=2609 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  api=4 insize=1224 outsize=769 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -29,74 +27,6 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(29): undeclared identifier 'f'
-  api=4 insize=1219 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(29): implicit truncation of vector type
-  api=4 insize=1105 outsize=1649 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(29): implicit truncation of vector type
-  api=4 insize=1098 outsize=1649 ok=1
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(29): implicit truncation of vector type
-  api=4 insize=1151 outsize=1737 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(26): cannot implicitly convert from 'const uint2' to 'const uint3'
-  api=4 insize=1571 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(26): cannot implicitly convert from 'uint2' to 'uint3'
-  api=4 insize=1556 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(26): cannot implicitly convert from 'uint2' to 'uint3'
-  api=4 insize=1549 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at WorldPosOSS.compute(23): cannot implicitly convert from 'uint2' to 'uint3'
-  api=4 insize=1314 outsize=0 ok=0
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(27): implicit truncation of vector type
-  api=4 insize=1115 outsize=1737 ok=1
 Cmd: initializeCompiler

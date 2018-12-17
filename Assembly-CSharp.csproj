@@ -10,7 +10,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{5B78B3A0-057B-5C89-26A9-EE2405BE3172}</ProjectGuid>
+    <ProjectGuid>{1A0C9036-8DEC-6FE7-EA36-48E3B1A7E2A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -64,6 +64,7 @@
     <Compile Include="Assets\ObjExporter.cs" />
     <Compile Include="Assets\RenderPipeline\MyPipeline.cs" />
     <Compile Include="Assets\RenderPipeline\MyPipelineAsset.cs" />
+    <Compile Include="Assets\RenderPipeline\MyPipelineTextureArray.cs" />
     <Compile Include="Assets\Resources\Scripts\Cam.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotation.cs" />
     <Compile Include="Assets\Resources\Scripts\Test.cs" />
@@ -75,40 +76,40 @@
     <None Include="Assets\Resources\Meshes\sponza\UVShader.shader" />
     <None Include="Assets\Resources\Shader\UVCoordReader.compute" />
     <Reference Include="Unity.RenderPipelines.Core.Editor">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Lightweight.Runtime">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Lightweight.Runtime.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.RenderPipelines.Lightweight.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Lightweight.Editor">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Lightweight.Editor.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.RenderPipelines.Lightweight.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.IncludePaths">
-      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.IncludePaths.dll</HintPath>
+      <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity Alt/Library/ScriptAssemblies/Unity.RenderPipelines.Core.IncludePaths.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

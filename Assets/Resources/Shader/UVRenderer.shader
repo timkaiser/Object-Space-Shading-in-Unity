@@ -6,7 +6,7 @@
 	{
 		Pass
 		{
-			Cull Off
+			CULL OFF
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -48,10 +48,18 @@
 			{
 				//placing the vertices according to their uv coordinate
 				v2g o;
-				o.vertex = float4(v.uv.xy * 2.0 - 1.0, 0, 1);
+				o.vertex = float4(v.uv.xy * 2 - 1, 0, 1);
 				o.uv = v.uv;
 				o.vertexId = v.vertexId;
-				return o;
+				return o;/*
+				v2g o;
+				v.vertex = float4(v.uv.xy - 0.5, 0, 1.0);
+				v.vertex = mul(UNITY_MATRIX_V, v.vertex);
+				v.vertex = mul(UNITY_MATRIX_P, v.vertex);
+				o.vertex = float4(v.vertex.xy, 0, 510 / 512.0); //HOW CAN I AVOID THIS SCALE FACTOR?
+				o.uv = v.uv;
+				o.vertexId = v.vertexId;
+				return o;*/
 			}
 			
 			//geometry shader

@@ -2,10 +2,24 @@
 
 #pragma kernel CSMain
 
-Texture2D<int2> IDandMip;	
+Texture2D<int2> IDandMip;
 Texture2D<float2> UV;
-RWTexture2DArray<float3> Output;
+RWTexture2D<float3> Output;;
+RWTexture2D<float3> Debug;
 int ID;
+
+//takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
+uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
+	uint widthAtLevel = atlasWidth / 2 >> mip;
+	uint heightAtLevel = atlasHeight >> mip;
+
+	uint2 xy = uint2(widthAtLevel * uv.x, heightAtLevel * uv.y);
+
+	uint offset = atlasWidth - 2 * widthAtLevel;
+
+	return uint2(xy.x + offset, xy.y);
+
+}
 
 //main part of compute shader
 [numthreads(8, 8, 1)]
@@ -16,14 +30,14 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
 	if (idAndMip.x != ID) { return; }
 
-	uint width, height, elements;
-	Output.GetDimensions(width, height, elements);
+	uint width, height;
+	Output.GetDimensions(width, height);
 
-	int mipLevel = idAndMip.y;
-	int widthAtLevel = width >> mipLevel;
-	int heightAtLevel = height >> mipLevel;
+	uint2 xy = uv_to_px_coords(uv, idAndMip.y, width, height);
 
-	Output[int3(widthAtLevel*uv.x, heightAtLevel*uv.y, mipLevel)] = float3(1, 0, 0);
+	//Debug[uint2(8192 * uv.xy)] = Debug[uint2(8192 * uv.xy)] + float3(0.1,0.01,0);
+
+	Output[xy] = float3(1, 0, 0);
 }
 
 
