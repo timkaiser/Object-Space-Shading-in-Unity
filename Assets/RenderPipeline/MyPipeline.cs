@@ -43,7 +43,7 @@ public class MyPipeline : RenderPipeline {
         public RenderTexture vertexIds;
         public RenderTexture tileMask;
         public RenderTexture worldPosMap;
-        //public RenderTexture debug;
+        public RenderTexture normalMap;
     }
 
     [SerializeField]
@@ -87,7 +87,6 @@ public class MyPipeline : RenderPipeline {
 
     //called once for every camera
     public void Render(ScriptableRenderContext context, Camera camera) {
-        Debug.Log(1/Time.deltaTime);
         context.SetupCameraProperties(camera);
 
         //cull objects not on screen
@@ -113,9 +112,8 @@ public class MyPipeline : RenderPipeline {
         //Compute shader _______________________________________________________________________________________________
         foreach (ObjData obj in sceneObjects) {
             if (obj.tileMask != null) { obj.tileMask.Release(); }
-            if (obj.worldPosMap != null) { obj.worldPosMap.Release(); }
             obj.tileMask = runTileMaskShader(obj.id, rts[0], rts[1]);
-            obj.worldPosMap = runWorldPosMapShader(obj.tileMask, obj);
+            runWorldPosMapShader(obj);
         }
 
         if (count == 10) {
@@ -342,32 +340,37 @@ public class MyPipeline : RenderPipeline {
         return result;
     }
 
-    RenderTexture runWorldPosMapShader(RenderTexture tileMask, ObjData obj) {
-        //get gameObject
-        Vector3[] vertices = GetVertices(obj.obj);
+    void runWorldPosMapShader(ObjData obj) {
+        //get gameObject location
+        Vector3[] locPos = GetVertices(obj.obj);
+        ComputeBuffer locationBuffer = new ComputeBuffer(locPos.Length, sizeof(float) * 3);
+        locationBuffer.SetData(locPos);
 
-        //compute shader parameters
-        ComputeBuffer vertexBuffer = new ComputeBuffer(vertices.Length, sizeof(float) * 3);
-        vertexBuffer.SetData(vertices);
+        //get normals
+        Vector3[] normals = GetNormals(obj.obj);
+        ComputeBuffer normalBuffer = new ComputeBuffer(normals.Length, sizeof(float) * 3);
+        normalBuffer.SetData(normals);
 
         Graphics.SetRenderTarget(null);
-        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat);
+        if (obj.worldPosMap == null) { obj.worldPosMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
+        if (obj.normalMap == null) { obj.normalMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
 
         worldPosShader.SetMatrix("localToWorldMatrix", obj.obj.GetComponent<Renderer>().localToWorldMatrix);
-        worldPosShader.SetTexture(worldPosKernel, "tileMask", tileMask);
+        worldPosShader.SetTexture(worldPosKernel, "tileMask", obj.tileMask);
         worldPosShader.SetTexture(worldPosKernel, "vertexIds", obj.vertexIds);
         worldPosShader.SetTexture(worldPosKernel, "baycentCoords", obj.baycentricCoords);
-        worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", vertexBuffer);
-        worldPosShader.SetTexture(worldPosKernel, "Output", result);
+        worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", locationBuffer);
+        worldPosShader.SetBuffer(worldPosKernel, "vertexNormals", normalBuffer);
+        worldPosShader.SetTexture(worldPosKernel, "WorldPos", obj.worldPosMap);
+        worldPosShader.SetTexture(worldPosKernel, "Normals", obj.normalMap);
 
         //Call compute shader
         worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 16, MAX_TEXTURE_SIZE / 16, 1);
 
-        vertexBuffer.Release();
+        locationBuffer.Release();
+        normalBuffer.Release();
 
         //SaveTexture("worldPos2", result);
-       
-        return result;
 
     }
 
@@ -465,10 +468,20 @@ public class MyPipeline : RenderPipeline {
         return vList.ToArray();
     }
 
+    Vector3[] GetNormals(GameObject go) { //Source: https://answers.unity.com/questions/697616/get-all-vertices-in-gameobject-to-array.html
+        MeshFilter[] mfs = go.GetComponentsInChildren<MeshFilter>();
+        List<Vector3> vList = new List<Vector3>();
+        foreach (MeshFilter mf in mfs) {
+            vList.AddRange(mf.mesh.normals);
+        }
+        return vList.ToArray();
+    }
+
     public void SaveTexture(string name, int width, int height, RenderTexture rt) { //source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
         byte[] bytes = toTexture2D(rt, width, height).EncodeToPNG();
         System.IO.File.WriteAllBytes("C:/Users/TIm/Desktop/"+name+".png", bytes);
     }
+
     Texture2D toTexture2D(RenderTexture rTex, int width, int height)  {//source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
         Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);
         RenderTexture.active = rTex;

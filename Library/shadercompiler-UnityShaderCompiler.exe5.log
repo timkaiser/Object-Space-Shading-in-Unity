@@ -50,3 +50,16 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(67): implicit truncation of vector type
+  api=4 insize=2789 outsize=3441 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
