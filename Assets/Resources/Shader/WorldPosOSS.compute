@@ -28,11 +28,13 @@ float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
 }
 
 
-[numthreads(8, 8, 1)]
+[numthreads(16, 16, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-	Output[id.xy] = float3((id.x/(8192*2.0)),id.y/8192.0,0);
-
+	if (id.x < 8192) { Output[id.xy] = float3(id.x / 81920.0, id.y / 81920.0, 0); }// (id.xy / 8192.0, 0) / 10;}
+	if (id.x >= 8192) { Output[id.xy] = float3(0,0,0.1);
+	}//float3((id.xy - uint2(8192,0)) / 4096.0,0)/10; }
+	
 	if (tileMask[(uint2)(id.xy / 8)].x == 0) { return; }
 
 	uint atlasWidth, atlasHeight;
@@ -50,19 +52,18 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
 	uint2 xy = uvMip.xy * uint2(atlasWidth / 2, atlasHeight);
 
-	/*xy = (baycentCoords[xy].x != 0 || baycentCoords[xy].y != 0 || baycentCoords[xy].z != 0) ? xy :
+	xy = (baycentCoords[xy].x != 0 || baycentCoords[xy].y != 0 || baycentCoords[xy].z != 0) ? xy :
 		(baycentCoords[xy + uint2(1, 0)].x != 0 || baycentCoords[xy + uint2(1, 0)].y != 0 || baycentCoords[xy + uint2(1, 0)].z != 0) ? xy + uint2(1, 0) :
 		(baycentCoords[xy + uint2(0, 1)].x != 0 || baycentCoords[xy + uint2(0, 1)].y != 0 || baycentCoords[xy + uint2(0, 1)].z != 0) ? xy + uint2(0, 1) :
 		(baycentCoords[xy + uint2(-1, 0)].x != 0 || baycentCoords[xy + uint2(-1, 0)].y != 0 || baycentCoords[xy + uint2(-1, 0)].z != 0) ? xy + uint2(-1, 0) :
 		(baycentCoords[xy + uint2(0, -1)].x != 0 || baycentCoords[xy + uint2(0, -1)].y != 0 || baycentCoords[xy + uint2(0, -1)].z != 0) ? xy + uint2(0, -1) : xy;
-		*/
+		
 
 	float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
 		+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
 		+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
 
-	float4 worldPos = mul(localToWorldMatrix, float4(localPos.x, localPos.y, localPos.z, 1)); //this minus should not be there
-
-	Output[id.xy] =  worldPos;
+	float4 worldPos = mul(localToWorldMatrix, float4(localPos.x, localPos.y, localPos.z, 1));
+	Output[id.xy] = (worldPos + float3(id.x / 8192.0, id.y / 8192.0, 0))/2;
 
 }

@@ -22,13 +22,14 @@ uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
 }
 
 //main part of compute shader
-[numthreads(8, 8, 1)]
+[numthreads(16, 16, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
 	int2 idAndMip = IDandMip[id.xy];
+
 	float2 uv = UV[id.xy];
 
-	if (idAndMip.x != ID) { return; }
+	//if (idAndMip.x != ID) { return; }
 
 	uint width, height;
 	Output.GetDimensions(width, height);

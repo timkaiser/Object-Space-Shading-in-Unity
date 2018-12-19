@@ -56,28 +56,27 @@
 
 		//fragment shader
 		fOut frag(v2f i) {
+			float2 dx = abs(ddx(i.uv));
+			float2 dy = abs(ddy(i.uv));
+			uint mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+
 			#if defined(_FIRST_PASS) //FIRST PASS
 			fOut o;
 			o.idAndMip.x = _ID;
 			o.uv = i.uv;
-			o.worldPos = i.worldPos;
-
-			float2 dx = abs(ddx(i.uv));
-			float2 dy = abs(ddy(i.uv));
-			int mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
+			o.worldPos = float3(mipLevel/13.0,1- mipLevel / 13.0,0);
+			
 			o.idAndMip.y = mipLevel;
 
 			return o;
 
 			#else	//READ BACK
-			float2 dx = abs(ddx(i.uv));
-			float2 dy = abs(ddy(i.uv));
-			uint mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
 			uint powMipLevel = pow(2, mipLevel);
 
 			float2 atlasOffset = float2(1.0 - (1.0 / powMipLevel), 0);		//offset in texture atlas (for mipmap) in uv coordinates (btw. 0 and 1)
 			float2 uv = i.uv / powMipLevel;
 			uv.x /= 2.0;  //because the atlas is twice the width of the texture
+
 
 			fOut o = { tex2D(_TextureAtlas, atlasOffset + uv)};
 			return o;

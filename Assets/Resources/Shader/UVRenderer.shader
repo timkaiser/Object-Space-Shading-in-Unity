@@ -50,6 +50,7 @@
 				v2g o;
 				o.vertex = float4(v.uv.xy * 2 - 1, 0, 1);
 				o.uv = v.uv;
+				o.uv.y = -o.uv.y;
 				o.vertexId = v.vertexId;
 				return o;/*
 				v2g o;

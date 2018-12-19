@@ -73,6 +73,7 @@ public class MyPipeline : RenderPipeline {
 
     //### Rendering #######################################################################################################
     //called by unity at the begining
+    int count = 0;
     public override void Render(ScriptableRenderContext renderContext, Camera[] cameras) {
         if (!Application.isPlaying) { return; }
 
@@ -97,8 +98,7 @@ public class MyPipeline : RenderPipeline {
         }
 
         CullResults.Cull(ref cullingParameters, context, ref cull);
-
-
+        
         #endregion
 
 
@@ -118,6 +118,11 @@ public class MyPipeline : RenderPipeline {
             obj.worldPosMap = runWorldPosMapShader(obj.tileMask, obj);
         }
 
+        if (count == 10) {
+            SaveTexture("tileMask", 2048, 1024, sceneObjects[0].tileMask);
+            SaveTexture("worldPos", 2 * 8192, 8192, sceneObjects[0].worldPosMap);
+        }
+        count++;
 
         //Read-Back ____________________________________________________________________________________________________
         finalImage = readBack(context, camera);
@@ -239,8 +244,7 @@ public class MyPipeline : RenderPipeline {
 
             sceneObjects.Add(obj);
 
-            SaveTexture(obj.obj.name, obj.baycentricCoords);
-
+            
             Graphics.SetRenderTarget(null);
         }
 
@@ -260,7 +264,7 @@ public class MyPipeline : RenderPipeline {
         RenderTexture[] rts = new RenderTexture[3] {
             new RenderTexture(width, height, 0, RenderTextureFormat.RGInt), //ID and Mip Map
             new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat), //UV
-            new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //UV
+            new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //WorldPos
         };
 
         for (int i = 0; i < rts.Length; i++) {
@@ -331,7 +335,7 @@ public class MyPipeline : RenderPipeline {
         //tileMaskShader.SetTexture(tileMaskKernel, "Debug", sceneObjects[0].debug);
 
         //Call compute shader
-        tileMaskShader.Dispatch(tileMaskKernel, IDandMip.width / 8, IDandMip.height / 8, 1);
+        tileMaskShader.Dispatch(tileMaskKernel, IDandMip.width / 16, IDandMip.height / 16, 1);
 
         
 
@@ -357,9 +361,12 @@ public class MyPipeline : RenderPipeline {
         worldPosShader.SetTexture(worldPosKernel, "Output", result);
 
         //Call compute shader
-        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 8, MAX_TEXTURE_SIZE / 8, 1);
+        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 16, MAX_TEXTURE_SIZE / 16, 1);
 
         vertexBuffer.Release();
+
+        //SaveTexture("worldPos2", result);
+       
         return result;
 
     }
@@ -458,12 +465,12 @@ public class MyPipeline : RenderPipeline {
         return vList.ToArray();
     }
 
-    public void SaveTexture(string name, RenderTexture rt) { //source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
-        byte[] bytes = toTexture2D(rt).EncodeToPNG();
+    public void SaveTexture(string name, int width, int height, RenderTexture rt) { //source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
+        byte[] bytes = toTexture2D(rt, width, height).EncodeToPNG();
         System.IO.File.WriteAllBytes("C:/Users/TIm/Desktop/"+name+".png", bytes);
     }
-    Texture2D toTexture2D(RenderTexture rTex) {
-        Texture2D tex = new Texture2D(8192, 8192, TextureFormat.RGB24, false);
+    Texture2D toTexture2D(RenderTexture rTex, int width, int height)  {//source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
+        Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);
         RenderTexture.active = rTex;
         tex.ReadPixels(new Rect(0, 0, rTex.width, rTex.height), 0, 0);
         tex.Apply();

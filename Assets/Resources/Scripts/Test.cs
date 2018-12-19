@@ -25,6 +25,7 @@ public class Test : MonoBehaviour {
 
         idMip = MyPipeline.idMipCopy;
         uv = MyPipeline.uvCopy;
+        worldPosCopy = MyPipeline.worldPosCopy;
         finalImage = MyPipeline.finalImage;
 
         sceneObjects = MyPipeline.sceneObjects;
