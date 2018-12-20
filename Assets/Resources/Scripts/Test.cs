@@ -5,9 +5,7 @@ using UnityEngine;
 //this class is only for accessing diffrent parts of the render pipeline from the unity interface for debug purposes only
 public class Test : MonoBehaviour {
     #if DEBUG
-    public RenderTexture idMip;
-    public RenderTexture uv;
-    public RenderTexture worldPosCopy;
+    public RenderTexture[] firstPassTargets;
 
     
     public RenderTexture finalImage;
@@ -16,20 +14,17 @@ public class Test : MonoBehaviour {
 
     public List<MyPipeline.ObjData> sceneObjects;
 
-    void Start() {
-       
-    }
+    public Object[] objects;
 
     private void Update() {
         fps = 1 / Time.deltaTime;
 
-        idMip = MyPipeline.idMipCopy;
-        uv = MyPipeline.uvCopy;
-        worldPosCopy = MyPipeline.worldPosCopy;
+        firstPassTargets = MyPipeline.firstPassTargets;
         finalImage = MyPipeline.finalImage;
 
         sceneObjects = MyPipeline.sceneObjects;
-        
+
+        objects = Resources.FindObjectsOfTypeAll<Object>();
     }
     #endif
 }

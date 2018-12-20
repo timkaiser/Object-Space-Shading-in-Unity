@@ -222,6 +222,7 @@ MonoBehaviour:
   finalImage: {fileID: 0}
   fps: 0
   sceneObjects: []
+  objects: []
 --- !u!4 &1897847972
 Transform:
   m_ObjectHideFlags: 0
@@ -245,6 +246,7 @@ GameObject:
   - component: {fileID: 2133627669}
   - component: {fileID: 2133627668}
   - component: {fileID: 2133627667}
+  - component: {fileID: 2133627670}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -312,3 +314,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2133627670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2133627666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304d28ccb529b9d4ca1316e7c4da351a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.1
+  loop: 1
+  positions:
+  - {x: 6, y: 4, z: -0.5}
+  - {x: 4, y: 4, z: -2.5}
+  - {x: 0, y: 4, z: -2}
+  rotations:
+  - {x: 8, y: -80, z: 0}
+  - {x: 8, y: -24, z: 0}
+  - {x: 4.5, y: -90, z: 0}
+  distances:
+  - 1
+  - 1

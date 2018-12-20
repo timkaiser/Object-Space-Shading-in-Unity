@@ -90,6 +90,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	Texture.GetDimensions(texWidth, texHeight);
 	uint2 texXY = uint2(texWidth * uvMip.x, texHeight * (1 - uvMip.y));
 
-	float intensity = /*ambient*/ 0.1 /*diffuse*/ * 0.5 * mul(worldNormal, lightPos) * 1;// /*specular*/ + 0.4 * pow(mul((camPos - worldPos), reflection), 4) * 0.5;
-	TextureTiles[id.xy] = Texture[texXY.xy] * intensity;
+	float lightIntensity = 0.1;
+	float light = /*ambient*/ 1 * lightIntensity /*diffuse*/ + 0.5 * mul(worldNormal, lightPos) * lightIntensity;// /*specular*/ +0.4 * pow(mul((camPos - worldPos), reflection), 32) * 0.5;
+	TextureTiles[id.xy] = Texture[texXY.xy] * light;
 }

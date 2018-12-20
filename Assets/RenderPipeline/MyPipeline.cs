@@ -14,16 +14,6 @@ public class MyPipeline : RenderPipeline {
 
     Texture texture;
     /* Public static for debugging reasons*/
-#if DEBUG
-    public static RenderTexture idMipCopy;
-    public static RenderTexture uvCopy;
-    public static RenderTexture worldPosCopy;
-    public static RenderTexture finalImage;
-
-#else
-    RenderTexture finalImage;
-#endif
-
     public const int MIP_MAP_COUNT = 12;
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
 
@@ -32,7 +22,11 @@ public class MyPipeline : RenderPipeline {
     private int tileMaskKernel;
     private ComputeShader worldPosShader;
     private int worldPosKernel;
+    private ComputeShader clearTextureShader;
+    private int clearTextureKernel;
 
+    public static RenderTexture[] firstPassTargets;
+    public static RenderTexture finalImage;
 
     //scene objects
     [System.Serializable]
@@ -60,16 +54,34 @@ public class MyPipeline : RenderPipeline {
         worldPosShader = (ComputeShader)Resources.Load("Shader/WorldPosOSS");
         worldPosKernel = worldPosShader.FindKernel("CSMain");
 
+        clearTextureShader = (ComputeShader)Resources.Load("Shader/ClearTexture");
+        clearTextureKernel = worldPosShader.FindKernel("CSMain");
 
-
-#if DEBUG
         int width = GameObject.FindObjectOfType<Camera>().pixelWidth;
         int height = GameObject.FindObjectOfType<Camera>().pixelHeight;
 
-        idMipCopy = new RenderTexture(width, height, 0, RenderTextureFormat.RGInt);
-        uvCopy = new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat);
-        worldPosCopy = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32);
-#endif
+        //firstPass renderTargets
+        firstPassTargets = new RenderTexture[4] {
+            new RenderTexture(width, height, 0, RenderTextureFormat.RGInt), //ID and Mip Map
+            new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat), //UV
+            new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //WorldPos
+            new RenderTexture(width, height, 0, RenderTextureFormat.Depth), //Depth
+        };
+
+        for (int i = 0; i < firstPassTargets.Length; i++) {
+            firstPassTargets[i].filterMode = FilterMode.Point;
+            firstPassTargets[i].anisoLevel = 0;
+            firstPassTargets[i].Create();
+        }
+
+
+        //fianl Image
+        finalImage = new RenderTexture(width, height, 32, RenderTextureFormat.ARGBFloat);
+        finalImage.filterMode = FilterMode.Point;
+        finalImage.anisoLevel = 0;
+        finalImage.enableRandomWrite = true;
+        finalImage.Create();
+
     }
 
 
@@ -77,6 +89,7 @@ public class MyPipeline : RenderPipeline {
     //called by unity at the begining
     public override void Render(ScriptableRenderContext renderContext, Camera[] cameras) {
         if (!Application.isPlaying) { return; }
+        Debug.Log(Time.realtimeSinceStartup + ": " + (1 / Time.deltaTime));
 
         base.Render(renderContext, cameras);
 
@@ -108,12 +121,11 @@ public class MyPipeline : RenderPipeline {
         }
 
         //First pass ___________________________________________________________________________________________________
-        RenderTexture[] rts = firstPass(context, camera);
+        firstPass(context, camera);
 
         //Compute shader _______________________________________________________________________________________________
         foreach (ObjData obj in sceneObjects) {
-            if (obj.tileMask != null) { obj.tileMask.Release(); }
-            obj.tileMask = runTileMaskShader(obj.id, rts[0], rts[1]);
+            runTileMaskShader(obj, firstPassTargets[0], firstPassTargets[1]);
             runWorldPosMapShader(obj);
         }
 
@@ -124,23 +136,11 @@ public class MyPipeline : RenderPipeline {
         count++;*/
 
         //Read-Back ____________________________________________________________________________________________________
-        finalImage = readBack(context, camera);
-
-        Graphics.Blit(finalImage, camera.activeTexture);
-
-#if DEBUG
-
-        Graphics.Blit(rts[0], idMipCopy);
-        Graphics.Blit(rts[1], uvCopy);
-        Graphics.Blit(rts[2], worldPosCopy);
-#endif
+        readBack(context, camera);
 
         //release rendertextures not in use
         Graphics.SetRenderTarget(null);
-
-        rts[0].Release();
-        rts[1].Release();
-        finalImage.Release();
+        
 
     }
 
@@ -251,37 +251,17 @@ public class MyPipeline : RenderPipeline {
         return sceneObjects;
     }
 
-    RenderTexture[] firstPass(ScriptableRenderContext context, Camera camera) {
+    void firstPass(ScriptableRenderContext context, Camera camera) {
         #region First Pass
 
         DrawRendererSettings drawSettings;
         FilterRenderersSettings filterSettings;
 
-        int width = camera.pixelWidth;
-        int height = camera.pixelHeight;
-
-        //Initialize Render Textures
-        RenderTexture[] rts = new RenderTexture[3] {
-            new RenderTexture(width, height, 0, RenderTextureFormat.RGInt), //ID and Mip Map
-            new RenderTexture(width, height, 0, RenderTextureFormat.RGFloat), //UV
-            new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32), //WorldPos
-        };
-
-        for (int i = 0; i < rts.Length; i++) {
-            rts[i].filterMode = FilterMode.Point;
-            rts[i].anisoLevel = 0;
-            rts[i].Create();
-        }
-
-        //create depth buffer
-        RenderTexture depthBufferTexture = new RenderTexture(width, height, 32, RenderTextureFormat.Depth);
-        depthBufferTexture.Create();
-
         //sample call for frame debugger
         cameraBuffer.BeginSample("First Pass");
 
         //set render target
-        camera.SetTargetBuffers(new RenderBuffer[3] { rts[1].colorBuffer, rts[0].colorBuffer, rts[2].colorBuffer }, depthBufferTexture.depthBuffer);
+        camera.SetTargetBuffers(new RenderBuffer[3] { firstPassTargets[1].colorBuffer, firstPassTargets[0].colorBuffer, firstPassTargets[2].colorBuffer }, firstPassTargets[3].depthBuffer);
 
         //clear render target
         #region clearing
@@ -317,29 +297,29 @@ public class MyPipeline : RenderPipeline {
         #endregion
 
         Graphics.SetRenderTarget(null);
-        depthBufferTexture.Release();
-
-        return rts;
     }
 
-    RenderTexture runTileMaskShader(int objID, RenderTexture IDandMip, RenderTexture uv) {
+    void runTileMaskShader(ObjData obj, RenderTexture IDandMip, RenderTexture uv) {
         Graphics.SetRenderTarget(null);
 
         //compue shader parameters
-        var result = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE / 8, RenderTextureFormat.R8);
 
-        tileMaskShader.SetTexture(tileMaskKernel, "Output", result);
+        if (obj.tileMask == null) {
+            obj.tileMask = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE / 8, RenderTextureFormat.R8);
+        } else {
+            clearTextureShader.SetTexture(clearTextureKernel, "Result", obj.tileMask);
+            clearTextureShader.Dispatch(clearTextureKernel, obj.tileMask.width / 8, obj.tileMask.height / 8, 1);
+        };
+
+        tileMaskShader.SetTexture(tileMaskKernel, "Output", obj.tileMask);
         tileMaskShader.SetTexture(tileMaskKernel, "IDandMip", IDandMip);
         tileMaskShader.SetTexture(tileMaskKernel, "UV", uv);
-        tileMaskShader.SetInt("ID", objID);
+        tileMaskShader.SetInt("ID", obj.id);
         //tileMaskShader.SetTexture(tileMaskKernel, "Debug", sceneObjects[0].debug);
 
         //Call compute shader
         tileMaskShader.Dispatch(tileMaskKernel, IDandMip.width / 16, IDandMip.height / 16, 1);
-
         
-
-        return result;
     }
 
     void runWorldPosMapShader(ObjData obj) {
@@ -379,7 +359,7 @@ public class MyPipeline : RenderPipeline {
 
     }
 
-    RenderTexture readBack(ScriptableRenderContext context, Camera camera) {
+    void readBack(ScriptableRenderContext context, Camera camera) {
 
         cameraBuffer.Clear();
 
@@ -396,21 +376,13 @@ public class MyPipeline : RenderPipeline {
         #region culling
         ScriptableCullingParameters cullingParameters;
         if (!CullResults.GetCullingParameters(camera, out cullingParameters)) {
-            return null;
+            return;
         }
 
         CullResults.Cull(ref cullingParameters, context, ref cull);
 
 
         #endregion
-
-        //fianl Image
-        RenderTexture finalImage = new RenderTexture(camera.pixelWidth, camera.pixelHeight, 32, RenderTextureFormat.ARGBFloat);
-        finalImage.filterMode = FilterMode.Point;
-        finalImage.anisoLevel = 0;
-        finalImage.enableRandomWrite = true;
-        finalImage.Create();
-
         Graphics.SetRenderTarget(finalImage);
 
         #region clearing
@@ -429,9 +401,6 @@ public class MyPipeline : RenderPipeline {
 
         filterSettings = new FilterRenderersSettings(true);
 
-
-
-
         //draw unlit opaque materials
         context.DrawRenderers(cull.visibleRenderers, ref drawSettings, filterSettings);
 
@@ -446,7 +415,7 @@ public class MyPipeline : RenderPipeline {
             mat.DisableKeyword("_READ_BACK");
         }
 
-        return finalImage;
+        Graphics.Blit(finalImage, camera.activeTexture);
     }
 
     //### other methodes #############################################################################################################
