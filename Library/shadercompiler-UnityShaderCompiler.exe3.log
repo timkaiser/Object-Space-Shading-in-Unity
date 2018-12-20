@@ -1,8 +1,83 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
+Cmd: disassembleShader
+  api=4 insize=2746 outsize=4495 ok=1
+Cmd: disassembleShader
+  api=4 insize=6026 outsize=8530 ok=1
+Cmd: disassembleShader
+  api=4 insize=1918 outsize=3410 ok=1
+Cmd: disassembleShader
+  api=4 insize=1918 outsize=3410 ok=1
+Cmd: disassembleShader
+  api=4 insize=3986 outsize=5883 ok=1
+Cmd: disassembleShader
+  api=4 insize=4734 outsize=6777 ok=1
+Cmd: disassembleShader
+  api=4 insize=218 outsize=660 ok=1
+Cmd: disassembleShader
+  api=4 insize=1714 outsize=3071 ok=1
+Cmd: disassembleShader
+  api=4 insize=6026 outsize=8530 ok=1
+Cmd: disassembleShader
+  api=4 insize=2070 outsize=3588 ok=1
+Cmd: disassembleShader
+  api=4 insize=2334 outsize=4097 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(65): implicit truncation of vector type
-  api=4 insize=2650 outsize=3097 ok=1
+  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(85): 'mul': implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(85): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(86): implicit truncation of vector type
+  api=4 insize=3540 outsize=3989 ok=1
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(85): 'mul': implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(85): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(86): implicit truncation of vector type
+  api=4 insize=3555 outsize=3989 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(81): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(86): 'mul': implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(87): implicit truncation of vector type
+  api=4 insize=3698 outsize=3273 ok=1
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(81): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(86): 'mul': implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(87): implicit truncation of vector type
+  api=4 insize=3697 outsize=3989 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

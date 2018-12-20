@@ -24,7 +24,7 @@ public class MyPipeline : RenderPipeline {
     RenderTexture finalImage;
 #endif
 
-    public const int MIP_MAP_COUNT = 13;
+    public const int MIP_MAP_COUNT = 12;
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
 
     //compute shader for mapping the normal/world position to a texture atlas
@@ -44,6 +44,8 @@ public class MyPipeline : RenderPipeline {
         public RenderTexture tileMask;
         public RenderTexture worldPosMap;
         public RenderTexture normalMap;
+        public RenderTexture textureTiles;
+        public Texture texture;
     }
 
     [SerializeField]
@@ -73,7 +75,6 @@ public class MyPipeline : RenderPipeline {
 
     //### Rendering #######################################################################################################
     //called by unity at the begining
-    int count = 0;
     public override void Render(ScriptableRenderContext renderContext, Camera[] cameras) {
         if (!Application.isPlaying) { return; }
 
@@ -116,11 +117,11 @@ public class MyPipeline : RenderPipeline {
             runWorldPosMapShader(obj);
         }
 
-        if (count == 10) {
+        /*if (count == 10) {
             SaveTexture("tileMask", 2048, 1024, sceneObjects[0].tileMask);
             SaveTexture("worldPos", 2 * 8192, 8192, sceneObjects[0].worldPosMap);
         }
-        count++;
+        count++;*/
 
         //Read-Back ____________________________________________________________________________________________________
         finalImage = readBack(context, camera);
@@ -166,6 +167,7 @@ public class MyPipeline : RenderPipeline {
             obj.obj = mesh.gameObject;
             obj.id = id;
             id++;
+            obj.texture = obj.obj.GetComponent<Renderer>().material.GetTexture("_Texture");
 
             int objLayer = obj.obj.layer;
             obj.obj.layer = 9;
@@ -354,15 +356,18 @@ public class MyPipeline : RenderPipeline {
         Graphics.SetRenderTarget(null);
         if (obj.worldPosMap == null) { obj.worldPosMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
         if (obj.normalMap == null) { obj.normalMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
+        if (obj.textureTiles == null) { obj.textureTiles = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
 
         worldPosShader.SetMatrix("localToWorldMatrix", obj.obj.GetComponent<Renderer>().localToWorldMatrix);
         worldPosShader.SetTexture(worldPosKernel, "tileMask", obj.tileMask);
         worldPosShader.SetTexture(worldPosKernel, "vertexIds", obj.vertexIds);
+        worldPosShader.SetTexture(worldPosKernel, "Texture", obj.texture);
         worldPosShader.SetTexture(worldPosKernel, "baycentCoords", obj.baycentricCoords);
         worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", locationBuffer);
         worldPosShader.SetBuffer(worldPosKernel, "vertexNormals", normalBuffer);
         worldPosShader.SetTexture(worldPosKernel, "WorldPos", obj.worldPosMap);
         worldPosShader.SetTexture(worldPosKernel, "Normals", obj.normalMap);
+        worldPosShader.SetTexture(worldPosKernel, "TextureTiles", obj.textureTiles);
 
         //Call compute shader
         worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 16, MAX_TEXTURE_SIZE / 16, 1);
@@ -380,7 +385,7 @@ public class MyPipeline : RenderPipeline {
 
         foreach (ObjData obj in sceneObjects) {
             Material mat = obj.obj.GetComponent<Renderer>().material;
-            mat.SetTexture("_TextureAtlas", obj.worldPosMap);
+            mat.SetTexture("_TextureAtlas", obj.textureTiles);
             mat.DisableKeyword("_FIRST_PASS");
             mat.EnableKeyword("_READ_BACK");
         }

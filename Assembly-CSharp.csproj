@@ -73,7 +73,7 @@
     <None Include="Assets\Resources\Shader\ReadBack.shader" />
     <None Include="Assets\Resources\Shader\ObjectSpaceShader.shader" />
     <None Include="Assets\Resources\Meshes\sponza\UVShader.shader" />
-    <None Include="Assets\Textures\credits.txt" />
+    <None Include="Assets\Resources\Textures\credits2.txt" />
     <None Include="Assets\Resources\Shader\UVCoordReader.compute" />
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>D:/EigeneDateien/WichtigeDokumente/Universitaet_und_Schule/18WS/Bachelorthesis/Object Space Shading in Unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>

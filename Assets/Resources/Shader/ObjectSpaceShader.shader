@@ -3,7 +3,8 @@
 	Properties
 	{
 		_ID("ID", Int) = 0
-		_TextureSize("TextureSize", Int) = 8192
+		_TextureSize("TextureSize", Int) = 4096
+		_Texture("_Texture", 2D) = "white" {}
 		_TextureAtlas("_TextureAtlas", 2D) = "" {}
 	}
 
@@ -59,12 +60,12 @@
 			float2 dx = abs(ddx(i.uv));
 			float2 dy = abs(ddy(i.uv));
 			uint mipLevel = log2(max(max(dx.x, dx.y), max(dy.x, dy.y)) * _TextureSize);
-
+			
 			#if defined(_FIRST_PASS) //FIRST PASS
 			fOut o;
 			o.idAndMip.x = _ID;
 			o.uv = i.uv;
-			o.worldPos = float3(mipLevel/13.0,1- mipLevel / 13.0,0);
+			o.worldPos = i.worldPos;
 			
 			o.idAndMip.y = mipLevel;
 

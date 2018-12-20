@@ -5,10 +5,12 @@ Matrix localToWorldMatrix;
 Texture2D<float3> tileMask;
 Texture2D<uint3> vertexIds;
 Texture2D<float3> baycentCoords;
+Texture2D<float4> Texture;
 RWStructuredBuffer<float3> vertexPositions;
 RWStructuredBuffer<float3> vertexNormals;
 RWTexture2D<float3> WorldPos;
 RWTexture2D<float3> Normals;
+RWTexture2D<float4> TextureTiles;
 
 //this takes the pixel position in the texture atlas and calculates the uv and mipmap coordinates
 float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
@@ -74,4 +76,20 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
 	float4 worldNormal = mul(localToWorldMatrix, float4(localNormal, 0));
 	Normals[id.xy] = worldNormal;// +float3(id.x / 8192.0, id.y / 8192.0, 0)) / 2;
+
+
+	//Texture
+
+	//light position (static)
+	float3 lightPos = float3(0, 10, 0) - worldPos;
+	//camera position (static)
+	//float3 camPos = float3(5, 4, -0.5);
+	//float3 reflection = 2 * mul(worldNormal, lightPos) * worldNormal - lightPos;
+	
+	uint texWidth, texHeight;
+	Texture.GetDimensions(texWidth, texHeight);
+	uint2 texXY = uint2(texWidth * uvMip.x, texHeight * (1 - uvMip.y));
+
+	float intensity = /*ambient*/ 0.1 /*diffuse*/ * 0.5 * mul(worldNormal, lightPos) * 1;// /*specular*/ + 0.4 * pow(mul((camPos - worldPos), reflection), 4) * 0.5;
+	TextureTiles[id.xy] = Texture[texXY.xy] * intensity;
 }

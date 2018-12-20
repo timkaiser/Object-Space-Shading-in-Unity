@@ -3,6 +3,150 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
+Cmd: preprocess
+  insize=2224 outsize=295 ok=1
+Cmd: preprocess
+  insize=2229 outsize=297 ok=1
+Cmd: initializeCompiler
+Cmd: preprocess
+  insize=2227 outsize=295 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2370 outsize=802 kw=_FIRST_PASS pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2370 outsize=762 kw=_FIRST_PASS pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: compileSnippet
+  api=4 type=0 insize=2370 outsize=802 kw=_READ_BACK pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2370 outsize=838 kw=_READ_BACK pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
+Cmd: preprocess
+  insize=2195 outsize=295 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2338 outsize=802 kw=_FIRST_PASS pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2338 outsize=666 kw=_FIRST_PASS pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: compileSnippet
+  api=4 type=0 insize=2338 outsize=802 kw=_READ_BACK pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2338 outsize=838 kw=_READ_BACK pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocess
+  insize=2236 outsize=336 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2338 outsize=802 kw=_FIRST_PASS pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2338 outsize=666 kw=_FIRST_PASS pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: compileSnippet
+  api=4 type=0 insize=2338 outsize=802 kw=_READ_BACK pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2338 outsize=838 kw=_READ_BACK pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING UNITY_ENABLE_DETAIL_NORMALMAP SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHT_PROBE_PROXY_VOLUME UNITY_LIGHTMAP_FULL_HDR ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3232 outsize=3231 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3253 outsize=3252 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3253 outsize=3252 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3249 outsize=3248 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3251 outsize=3250 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3487 outsize=3486 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 4 at WorldPosOSS.compute(70): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
+  error: 2 plat 4 at WorldPosOSS.compute(85): syntax error: unexpected token '*'
+  api=4 insize=3486 outsize=0 ok=0
+Cmd: preprocessCompute
+  insize=3487 outsize=3486 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3541 outsize=3540 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3558 outsize=3557 ok=1
+Cmd: preprocessCompute
+  insize=3556 outsize=3555 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3685 outsize=3684 ok=1
+Cmd: preprocessCompute
+  insize=3686 outsize=3685 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3687 outsize=3686 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3693 outsize=3692 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3690 outsize=3689 ok=1
+Cmd: preprocessCompute
+  insize=3690 outsize=3689 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3689 outsize=3688 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3689 outsize=3688 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3693 outsize=3692 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3688 outsize=3687 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3690 outsize=3689 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3694 outsize=3693 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3699 outsize=3698 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3699 outsize=3698 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3698 outsize=3697 ok=1
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3827 outsize=3826 ok=1
+Cmd: preprocessCompute
+  insize=3828 outsize=3827 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3843 outsize=3842 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: preprocessCompute
+  insize=3844 outsize=3843 ok=1
 Cmd: initializeCompiler
