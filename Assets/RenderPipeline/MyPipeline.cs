@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using System;
 
 public class MyPipeline : RenderPipeline {
     //### variables ################################################################################################################
@@ -14,8 +17,15 @@ public class MyPipeline : RenderPipeline {
 
     Texture texture;
     /* Public static for debugging reasons*/
+    //statistics
+    public static long pixelCountStat = 0;
+    public static long tileCountStat = 0;
+
+    //texture constants
     public const int MIP_MAP_COUNT = 12;
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
+    public const int TILE_SIZE = 8;
+
 
     //compute shader for mapping the normal/world position to a texture atlas
     private ComputeShader tileMaskShader;
@@ -24,6 +34,8 @@ public class MyPipeline : RenderPipeline {
     private int worldPosKernel;
     private ComputeShader clearTextureShader;
     private int clearTextureKernel;
+    private ComputeShader countShader;
+    private int countKernel;
 
     public static RenderTexture[] firstPassTargets;
     public static RenderTexture finalImage;
@@ -36,10 +48,10 @@ public class MyPipeline : RenderPipeline {
         public RenderTexture baycentricCoords;
         public RenderTexture vertexIds;
         public RenderTexture tileMask;
-        public RenderTexture worldPosMap;
-        public RenderTexture normalMap;
+        //public RenderTexture worldPosMap;
+        //public RenderTexture normalMap;
         public RenderTexture textureTiles;
-        public Texture texture;
+        //public Texture texture;
     }
 
     [SerializeField]
@@ -55,7 +67,10 @@ public class MyPipeline : RenderPipeline {
         worldPosKernel = worldPosShader.FindKernel("CSMain");
 
         clearTextureShader = (ComputeShader)Resources.Load("Shader/ClearTexture");
-        clearTextureKernel = worldPosShader.FindKernel("CSMain");
+        clearTextureKernel = clearTextureShader.FindKernel("CSMain");
+
+        countShader = (ComputeShader)Resources.Load("Shader/CountRedPixels");
+        countKernel = countShader.FindKernel("Count");
 
         int width = GameObject.FindObjectOfType<Camera>().pixelWidth;
         int height = GameObject.FindObjectOfType<Camera>().pixelHeight;
@@ -68,7 +83,7 @@ public class MyPipeline : RenderPipeline {
             new RenderTexture(width, height, 0, RenderTextureFormat.Depth), //Depth
         };
 
-        for (int i = 0; i < firstPassTargets.Length; i++) {
+        for (int i = 0; i < firstPassTargets.Length-1; i++) {
             firstPassTargets[i].filterMode = FilterMode.Point;
             firstPassTargets[i].anisoLevel = 0;
             firstPassTargets[i].Create();
@@ -81,7 +96,7 @@ public class MyPipeline : RenderPipeline {
         finalImage.anisoLevel = 0;
         finalImage.enableRandomWrite = true;
         finalImage.Create();
-
+        
     }
 
 
@@ -89,7 +104,7 @@ public class MyPipeline : RenderPipeline {
     //called by unity at the begining
     public override void Render(ScriptableRenderContext renderContext, Camera[] cameras) {
         if (!Application.isPlaying) { return; }
-        Debug.Log(Time.realtimeSinceStartup + ": " + (1 / Time.deltaTime));
+        //Debug.Log("FPS: " + (1 / Time.deltaTime));
 
         base.Render(renderContext, cameras);
 
@@ -101,8 +116,11 @@ public class MyPipeline : RenderPipeline {
 
     //called once for every camera
     public void Render(ScriptableRenderContext context, Camera camera) {
-        context.SetupCameraProperties(camera);
+        //statistics
+        pixelCountStat = 0;
+        tileCountStat = 0;
 
+        context.SetupCameraProperties(camera);
         //cull objects not on screen
         #region culling
         ScriptableCullingParameters cullingParameters;
@@ -160,14 +178,14 @@ public class MyPipeline : RenderPipeline {
             camera.cullingMask = 1 << 9;
             context.SetupCameraProperties(camera);
 
-
-
+            
 
             ObjData obj = new ObjData();
             obj.obj = mesh.gameObject;
+            //obj.obj.GetComponent<Renderer>().material.SetInt("_TextureSize", obj.obj.GetComponent<Renderer>().material.GetTexture("_Texture").width);
             obj.id = id;
             id++;
-            obj.texture = obj.obj.GetComponent<Renderer>().material.GetTexture("_Texture");
+            //obj.texture = obj.obj.GetComponent<Renderer>().material.GetTexture("_Texture");
 
             int objLayer = obj.obj.layer;
             obj.obj.layer = 9;
@@ -269,7 +287,7 @@ public class MyPipeline : RenderPipeline {
         cameraBuffer.ClearRenderTarget(
             (clearFlags & CameraClearFlags.Depth) != 0,
             (clearFlags & CameraClearFlags.Color) != 0,
-            camera.backgroundColor//new Color(0, 0, 0, 0)
+            new Color(0, 0, 1, 0) //camera.backgroundColor
         );
 
 
@@ -305,7 +323,7 @@ public class MyPipeline : RenderPipeline {
         //compue shader parameters
 
         if (obj.tileMask == null) {
-            obj.tileMask = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE / 8, RenderTextureFormat.R8);
+            obj.tileMask = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE / TILE_SIZE, RenderTextureFormat.R8);
         } else {
             clearTextureShader.SetTexture(clearTextureKernel, "Result", obj.tileMask);
             clearTextureShader.Dispatch(clearTextureKernel, obj.tileMask.width / 8, obj.tileMask.height / 8, 1);
@@ -315,11 +333,47 @@ public class MyPipeline : RenderPipeline {
         tileMaskShader.SetTexture(tileMaskKernel, "IDandMip", IDandMip);
         tileMaskShader.SetTexture(tileMaskKernel, "UV", uv);
         tileMaskShader.SetInt("ID", obj.id);
-        //tileMaskShader.SetTexture(tileMaskKernel, "Debug", sceneObjects[0].debug);
 
-        //Call compute shader
-        tileMaskShader.Dispatch(tileMaskKernel, IDandMip.width / 16, IDandMip.height / 16, 1);
         
+        
+        //for statistic use
+        int[] pixelStats = new int[1];
+        ComputeBuffer statBuffer = new ComputeBuffer(pixelStats.Length, sizeof(int));
+        statBuffer.SetData(pixelStats);
+        tileMaskShader.SetBuffer(tileMaskKernel, "Stats", statBuffer);
+        
+        //Call compute shader
+        tileMaskShader.Dispatch(tileMaskKernel, IDandMip.width / 8, IDandMip.height / 8, 1);
+        
+        //statistics
+        statBuffer.GetData(pixelStats);
+        pixelCountStat += pixelStats[0];
+        statBuffer.Release();
+        statBuffer = null;
+
+        int[] tileStats = new int[1];
+        ComputeBuffer tileStatBuffer = new ComputeBuffer(tileStats.Length, sizeof(int));
+        tileStatBuffer.SetData(tileStats);
+        countShader.SetBuffer(countKernel, "Output", tileStatBuffer);
+        countShader.SetTexture(countKernel, "Input", obj.tileMask);
+
+        countShader.Dispatch(countKernel, obj.tileMask.width / 8, obj.tileMask.height / 8, 1);
+
+        tileStatBuffer.GetData(tileStats);
+
+        tileCountStat += tileStats[0];
+
+        tileStatBuffer.GetData(pixelStats);
+        tileStatBuffer.Release();
+        tileStatBuffer = null;
+
+        //Debug.Log(pixelStat + " | " + tileStats[0]);
+        //Log(Time.frameCount + "," + Time.time + "," + pixelStats[0] + "," + tileStats[0] + "," + uv.width + "," + uv.height + "," + TILE_SIZE + "\n");
+        
+        /*if(new System.Random().Next(0, 100) == 5) {
+            SaveTexture(""+stats[1], obj.tileMask.width, obj.tileMask.height, obj.tileMask);
+        }*/
+
     }
 
     void runWorldPosMapShader(ObjData obj) {
@@ -334,23 +388,23 @@ public class MyPipeline : RenderPipeline {
         normalBuffer.SetData(normals);
 
         Graphics.SetRenderTarget(null);
-        if (obj.worldPosMap == null) { obj.worldPosMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
-        if (obj.normalMap == null) { obj.normalMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
+        //if (obj.worldPosMap == null) { obj.worldPosMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
+        //if (obj.normalMap == null) { obj.normalMap = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
         if (obj.textureTiles == null) { obj.textureTiles = CreateIntermediateCSTarget(MAX_TEXTURE_SIZE, RenderTextureFormat.ARGBFloat); }
 
         worldPosShader.SetMatrix("localToWorldMatrix", obj.obj.GetComponent<Renderer>().localToWorldMatrix);
         worldPosShader.SetTexture(worldPosKernel, "tileMask", obj.tileMask);
         worldPosShader.SetTexture(worldPosKernel, "vertexIds", obj.vertexIds);
-        worldPosShader.SetTexture(worldPosKernel, "Texture", obj.texture);
+        worldPosShader.SetTexture(worldPosKernel, "Texture", obj.obj.GetComponent<Renderer>().material.GetTexture("_Texture"));
         worldPosShader.SetTexture(worldPosKernel, "baycentCoords", obj.baycentricCoords);
         worldPosShader.SetBuffer(worldPosKernel, "vertexPositions", locationBuffer);
         worldPosShader.SetBuffer(worldPosKernel, "vertexNormals", normalBuffer);
-        worldPosShader.SetTexture(worldPosKernel, "WorldPos", obj.worldPosMap);
-        worldPosShader.SetTexture(worldPosKernel, "Normals", obj.normalMap);
+        //worldPosShader.SetTexture(worldPosKernel, "WorldPos", obj.worldPosMap);
+        //worldPosShader.SetTexture(worldPosKernel, "Normals", obj.normalMap);
         worldPosShader.SetTexture(worldPosKernel, "TextureTiles", obj.textureTiles);
 
         //Call compute shader
-        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 16, MAX_TEXTURE_SIZE / 16, 1);
+        worldPosShader.Dispatch(worldPosKernel, MAX_TEXTURE_SIZE * 2 / 8, MAX_TEXTURE_SIZE / 8, 1);
 
         locationBuffer.Release();
         normalBuffer.Release();
@@ -453,7 +507,7 @@ public class MyPipeline : RenderPipeline {
 
     public void SaveTexture(string name, int width, int height, RenderTexture rt) { //source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
         byte[] bytes = toTexture2D(rt, width, height).EncodeToPNG();
-        System.IO.File.WriteAllBytes("C:/Users/TIm/Desktop/"+name+".png", bytes);
+        System.IO.File.WriteAllBytes(Environment.CurrentDirectory+ "\\Logs\\" + name+".png", bytes);
     }
 
     Texture2D toTexture2D(RenderTexture rTex, int width, int height)  {//source: https://answers.unity.com/questions/37134/is-it-possible-to-save-rendertextures-into-png-fil.html
@@ -462,5 +516,29 @@ public class MyPipeline : RenderPipeline {
         tex.ReadPixels(new Rect(0, 0, rTex.width, rTex.height), 0, 0);
         tex.Apply();
         return tex;
+    }
+
+    //output log
+    static StringBuilder output;
+    
+    public static void Log(string m) {
+        if (output == null) {
+            output = new StringBuilder();
+        }
+        output.Append(m);
+    }
+
+    public static void SaveLogCSV(string name) {
+        if (output == null) { return; }
+
+        DateTime time = System.DateTime.UtcNow;
+        string s = name + "_" + time.Year + "-" + time.Month + "-" + time.Day + "_" + time.Hour + time.Minute +".csv";
+
+        File.AppendAllText(Environment.CurrentDirectory+ "\\Logs\\" +s, output.ToString());
+        ResetLog();
+    }
+
+    public static void ResetLog() {
+        output = null;
     }
 }

@@ -216,9 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cac7648d486c0c344a170726452bb6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idMip: {fileID: 0}
-  uv: {fileID: 0}
-  worldPosCopy: {fileID: 0}
+  firstPassTargets: []
   finalImage: {fileID: 0}
   fps: 0
   sceneObjects: []

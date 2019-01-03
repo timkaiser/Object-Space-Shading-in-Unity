@@ -1,7 +1,7 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=242 outsize=289 ok=1
+  api=4 insize=1178 outsize=1101 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -22,20 +22,8 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(70): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(84): implicit truncation of vector type
-  error: 2 plat 4 at WorldPosOSS.compute(94): undeclared identifier 'camPos'
-  error: 1 plat 4 at WorldPosOSS.compute(94): 'mul': implicit truncation of vector type
-  api=4 insize=3890 outsize=0 ok=0
 Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(70): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(94): 'mul': implicit truncation of vector type
-  api=4 insize=3893 outsize=4229 ok=1
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

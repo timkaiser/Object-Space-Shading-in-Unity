@@ -1,27 +1,19 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 1 plat 4 at WorldPosOSS.compute(70): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(78): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(87): 'mul': implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(87): implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(94): 'mul': implicit truncation of vector type
-  error: 1 plat 4 at WorldPosOSS.compute(94): implicit truncation of vector type
-  api=4 insize=3906 outsize=4489 ok=1
+  error: 2 plat 4 at CountRedPixels.compute(7): syntax error: unexpected token 'long'
+  api=4 insize=365 outsize=0 ok=0
+Cmd: compileComputeKernel
+  error: 2 plat 4 at CountRedPixels.compute(12): undeclared identifier 'xy'
+  api=4 insize=380 outsize=0 ok=0
+Cmd: compileComputeKernel
+  error: 2 plat 4 at CountRedPixels.compute(13): undeclared identifier 'Output'
+  api=4 insize=383 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  error: 2 plat 4 at CountRedPixels.compute(13): 'InterlockedAdd': no matching 2 parameter intrinsic function; Possible intrinsic functions are: InterlockedAdd(int|uint, uint) InterlockedAdd(int|uint, uint, out int|uint original)
+  api=4 insize=387 outsize=0 ok=0
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

@@ -2,9 +2,10 @@
 
 #pragma kernel CSMain
 
+RWStructuredBuffer<uint> Stats;
 Texture2D<int2> IDandMip;
 Texture2D<float2> UV;
-RWTexture2D<float3> Output;;
+RWTexture2D<float3> Output;
 RWTexture2D<float3> Debug;
 int ID;
 
@@ -22,23 +23,25 @@ uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
 }
 
 //main part of compute shader
-[numthreads(16, 16, 1)]
+[numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
+	
 	int2 idAndMip = IDandMip[id.xy];
 
 	float2 uv = UV[id.xy];
 
-	//if (idAndMip.x != ID) { return; }
+	if (idAndMip.x != ID) { return; }
 
 	uint width, height;
 	Output.GetDimensions(width, height);
 
 	uint2 xy = uv_to_px_coords(uv, idAndMip.y, width, height);
 
-	//Debug[uint2(8192 * uv.xy)] = Debug[uint2(8192 * uv.xy)] + float3(0.1,0.01,0);
+	InterlockedAdd(Stats[0], 1);
 
 	Output[xy] = float3(1, 0, 0);
+
 }
 
 

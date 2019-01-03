@@ -8,8 +8,8 @@ Texture2D<float3> baycentCoords;
 Texture2D<float4> Texture;
 RWStructuredBuffer<float3> vertexPositions;
 RWStructuredBuffer<float3> vertexNormals;
-RWTexture2D<float3> WorldPos;
-RWTexture2D<float3> Normals;
+//RWTexture2D<float3> WorldPos;
+//RWTexture2D<float3> Normals;
 RWTexture2D<float4> TextureTiles;
 
 //this takes the pixel position in the texture atlas and calculates the uv and mipmap coordinates
@@ -32,14 +32,14 @@ float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
 }
 
 
-[numthreads(16, 16, 1)]
+[numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
 	if (tileMask[(uint2)(id.xy / 8)].x == 0) { return; }
 
 	//Atlas Postion__________________________________________________
 	uint atlasWidth, atlasHeight;
-	WorldPos.GetDimensions(atlasWidth, atlasHeight);
+	TextureTiles.GetDimensions(atlasWidth, atlasHeight);
 
 	float3 uvMip = px_to_uv_coords(id.xy, atlasWidth, atlasHeight);
 
@@ -52,12 +52,12 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
 	uint2 xy = uvMip.xy * uint2(atlasWidth / 2, atlasHeight);
 
-	xy = (baycentCoords[xy].x != 0 || baycentCoords[xy].y != 0 || baycentCoords[xy].z != 0) ? xy :
+	/*xy = (baycentCoords[xy].x != 0 || baycentCoords[xy].y != 0 || baycentCoords[xy].z != 0) ? xy :
 		(baycentCoords[xy + uint2(1, 0)].x != 0 || baycentCoords[xy + uint2(1, 0)].y != 0 || baycentCoords[xy + uint2(1, 0)].z != 0) ? xy + uint2(1, 0) :
 		(baycentCoords[xy + uint2(0, 1)].x != 0 || baycentCoords[xy + uint2(0, 1)].y != 0 || baycentCoords[xy + uint2(0, 1)].z != 0) ? xy + uint2(0, 1) :
 		(baycentCoords[xy + uint2(-1, 0)].x != 0 || baycentCoords[xy + uint2(-1, 0)].y != 0 || baycentCoords[xy + uint2(-1, 0)].z != 0) ? xy + uint2(-1, 0) :
 		(baycentCoords[xy + uint2(0, -1)].x != 0 || baycentCoords[xy + uint2(0, -1)].y != 0 || baycentCoords[xy + uint2(0, -1)].z != 0) ? xy + uint2(0, -1) : xy;
-
+		*/
 	if (baycentCoords[xy].x == 0 && baycentCoords[xy].y == 0 && baycentCoords[xy].z == 0) {
 		return;
 	}
@@ -67,7 +67,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 		+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
 
 	float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
-	WorldPos[id.xy] = worldPos;// +float3(id.x / 8192.0, id.y / 8192.0, 0)) / 2;
+	//WorldPos[id.xy] = worldPos;// +float3(id.x / 8192.0, id.y / 8192.0, 0)) / 2;
 
 	//normals
 	float3 localNormal = vertexNormals[vertexIds[xy].x] * baycentCoords[xy].x
@@ -75,7 +75,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 		+ vertexNormals[vertexIds[xy].z] * baycentCoords[xy].z;
 
 	float4 worldNormal = mul(localToWorldMatrix, float4(localNormal, 0));
-	Normals[id.xy] = worldNormal;// +float3(id.x / 8192.0, id.y / 8192.0, 0)) / 2;
+	//Normals[id.xy] = worldNormal;// +float3(id.x / 8192.0, id.y / 8192.0, 0)) / 2;
 
 
 	//Texture
