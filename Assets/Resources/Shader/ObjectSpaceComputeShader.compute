@@ -1,0 +1,97 @@
+﻿// This computeshader shades an object and store the result in a texture
+// Input:	localToWorldMatrix: Matrix, 4x4, to calculate the world position from a given loocal position
+//			objectTexture:		float4 Texture, Texture of the object
+//			tilemask:			uint Texture, mask that shows which parts of the object have to be shaded (1) and which not (0)
+//			vertexIds:			uint3 Texture, displays ids of the vertices the corresponding part of the texture belongs to
+//			baycentCoords:		float3 Texture, displays baycentrinc coordinates of the corresponding pixel of the texture within the triangle given by vertexIds
+//			vertexPositions:	float3 Buffer, contains position of every vertice
+//			vertexNormals:		float3 Buffer, contains normal of every vertice
+// Output:	textureTiles:		float4 Texture, contains shaded texture
+
+#pragma kernel CSMain
+
+Matrix localToWorldMatrix;
+Texture2D<float4> objectTexture;
+Texture2D<uint> tileMask;
+Texture2D<uint3> vertexIds;
+Texture2D<float3> baycentCoords;
+RWStructuredBuffer<float3> vertexPositions;
+RWStructuredBuffer<float3> vertexNormals;
+RWTexture2D<float4> textureTiles;
+
+// This methode takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
+// Input:	xy:			uint2, position in pixel in texture atlas
+//			atlasWidth: uint, size of the texture atlasuv
+//			atlasHeight: uint, size of the texture atlas
+// Output:	float3, xy := uv coordinates between (0,0) and (1,1), position in object texture; z := mip level
+float3 px_to_uv_coords(uint2 xy, uint atlasWidth, uint atlasHeight) {
+	uint mip = 0;
+
+	for (uint w = atlasWidth / 2; xy.x >= w; w /= 2) {
+		mip += 1;
+		xy.x -= w;
+	}
+
+	uint widthAtLevel = atlasWidth / 2 >> mip;
+	uint heightAtLevel = atlasHeight >> mip;
+
+	uint offset = atlasWidth - 2 * widthAtLevel;
+
+	float2 uv = float2((float)xy.x / widthAtLevel, (float)xy.y / heightAtLevel);
+
+	return float3(uv, mip);
+}
+
+//main part of the shader
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+	//Calculating texture position in uv and pixel __________________________________________________________________________
+	//get dimensions of texture atlas
+	uint atlasWidth, atlasHeight;
+	textureTiles.GetDimensions(atlasWidth, atlasHeight);
+
+	//get dimensions of tile mask
+	uint maskWidth, maskHeight;
+	tileMask.GetDimensions(maskWidth, maskHeight);
+
+	//return if tilemask is 0 at position id.xy
+	if (tileMask[(uint2)(id.xy / (atlasHeight/maskHeight))/* = tilesize*/].x == 0) { return; }
+
+	//get position in atlas
+	float3 uvMip = px_to_uv_coords(id.xy, atlasWidth, atlasHeight);
+
+	//postion on texture in pixel
+	uint2 xy = uvMip.xy * uint2(atlasWidth / 2, atlasHeight);
+
+	//calculating world position and normal _________________________________________________________________________________
+	//world position
+	float3 localPos = vertexPositions[vertexIds[xy].x] * baycentCoords[xy].x
+		+ vertexPositions[vertexIds[xy].y] * baycentCoords[xy].y
+		+ vertexPositions[vertexIds[xy].z] * baycentCoords[xy].z;
+
+	float4 worldPos = mul(localToWorldMatrix, float4(localPos, 1));
+
+	//normals
+	float3 localNormal = vertexNormals[vertexIds[xy].x] * baycentCoords[xy].x
+		+ vertexNormals[vertexIds[xy].y] * baycentCoords[xy].y
+		+ vertexNormals[vertexIds[xy].z] * baycentCoords[xy].z;
+
+	float4 worldNormal = mul(localToWorldMatrix, float4(localNormal, 0));
+	
+	//shading _______________________________________________________________________________________________________________
+	//light position (static)
+	float3 lightPos = float3(0, 10, 0) - worldPos;
+	//camera position (static)
+	//float3 camPos = float3(5, 4, -0.5);
+	//float3 reflection = 2 * mul(worldNormal, lightPos) * worldNormal - lightPos;
+	
+	//get texture dimensions
+	uint texWidth, texHeight;
+	objectTexture.GetDimensions(texWidth, texHeight);
+	uint2 texXY = uint2(texWidth * uvMip.x, texHeight * (1 - uvMip.y));
+
+	float lightIntensity = 0.1;
+	float light = /*ambient*/ 1 * lightIntensity /*diffuse*/ + 0.5 * mul(worldNormal, lightPos) * lightIntensity;// /*specular*/ +0.4 * pow(mul((camPos - worldPos), reflection), 32) * 0.5;
+	textureTiles[id.xy] = objectTexture[texXY.xy] * light;
+}

@@ -1,15 +1,23 @@
-﻿//this compute shader takes the rendered uv and mip map coordinates of the first pass and writes a tilemask of wich parts of the texture gets actually rendered
+﻿// This compute shader takes the rendered uv and mip map coordinates from the first pass and writes a tilemask of which parts of the texture gets actually rendered
+// Input:	IDandMip:	int2 Texture, contains the id and the mip level of every object in view
+//			UV:			float2 Texture, contains the visible uv coordinates of every object in view 
+//			ID:			int, contains the ID of the current object
+// Output:	Output:		float3 Texture, tilemask displaying every pixel that is visible in scene, cluster in a given size
 
 #pragma kernel CSMain
 
-RWStructuredBuffer<uint> Stats;
 Texture2D<int2> IDandMip;
 Texture2D<float2> UV;
-RWTexture2D<float3> Output;
-RWTexture2D<float3> Debug;
 int ID;
+RWTexture2D<float3> Output;
 
-//takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
+
+// This methode takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
+// Input:	uv: float2 between (0,0) and (1,1), position in object texture
+//			mip: uint, mip level at position uv
+//			atlasWidth: uint, size of the texture atlasuv
+//			atlasHeight: uint, size of the texture atlas
+// Output:	uint2, position in pixel in texture atlas
 uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
 	uint widthAtLevel = atlasWidth / 2 >> mip;
 	uint heightAtLevel = atlasHeight >> mip;
@@ -22,24 +30,22 @@ uint2 uv_to_px_coords(float2 uv, uint mip, uint atlasWidth, uint atlasHeight) {
 
 }
 
+
 //main part of compute shader
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-	
-	int2 idAndMip = IDandMip[id.xy];
+	// return if displayed object is not current object
+	if (IDandMip[id.xy].x != ID) { return; }
 
-	float2 uv = UV[id.xy];
-
-	if (idAndMip.x != ID) { return; }
-
+	//get dimensions of the tilemask
 	uint width, height;
 	Output.GetDimensions(width, height);
 
-	uint2 xy = uv_to_px_coords(uv, idAndMip.y, width, height);
+	//get position in texture atlas
+	uint2 xy = uv_to_px_coords(UV[id.xy], IDandMip[id.xy].y, width, height);
 
-	InterlockedAdd(Stats[0], 1);
-
+	//set pixel in texture atlas to red
 	Output[xy] = float3(1, 0, 0);
 
 }

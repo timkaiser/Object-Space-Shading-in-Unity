@@ -1,19 +1,28 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 2 plat 4 at CountRedPixels.compute(7): syntax error: unexpected token 'long'
-  api=4 insize=365 outsize=0 ok=0
+  api=4 insize=1852 outsize=1005 ok=1
 Cmd: compileComputeKernel
-  error: 2 plat 4 at CountRedPixels.compute(12): undeclared identifier 'xy'
-  api=4 insize=380 outsize=0 ok=0
-Cmd: compileComputeKernel
-  error: 2 plat 4 at CountRedPixels.compute(13): undeclared identifier 'Output'
-  api=4 insize=383 outsize=0 ok=0
-Cmd: initializeCompiler
+  error: 1 plat 4 at WorldPosOSS.compute(85): implicit truncation of vector type
+  error: 1 plat 4 at WorldPosOSS.compute(95): 'mul': implicit truncation of vector type
+  api=4 insize=3963 outsize=3029 ok=1
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  error: 2 plat 4 at CountRedPixels.compute(13): 'InterlockedAdd': no matching 2 parameter intrinsic function; Possible intrinsic functions are: InterlockedAdd(int|uint, uint) InterlockedAdd(int|uint, uint, out int|uint original)
-  api=4 insize=387 outsize=0 ok=0
+  error: 1 plat 4 at ObjectSpaceComputeShader.compute(83): implicit truncation of vector type
+  error: 1 plat 4 at ObjectSpaceComputeShader.compute(93): 'mul': implicit truncation of vector type
+  api=4 insize=3362 outsize=3009 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

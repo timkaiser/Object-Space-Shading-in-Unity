@@ -1,16 +1,15 @@
-﻿using System.Collections;
+﻿//This script rotates the object with a set speed
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Rotation : MonoBehaviour {
+    //Rotation Speed
     public float speed = 10f;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
+    
+    // Update is called once per frame
 	void Update () {
+        //Rotate
        this.transform.Rotate(Vector3.up * speed*Time.deltaTime);
        this.transform.Rotate(Vector3.left * speed * Time.deltaTime * 2);
     }

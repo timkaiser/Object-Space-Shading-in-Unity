@@ -63,17 +63,16 @@
   <ItemGroup>
     <Compile Include="Assets\RenderPipeline\MyPipeline.cs" />
     <Compile Include="Assets\RenderPipeline\MyPipelineAsset.cs" />
-    <Compile Include="Assets\RenderPipeline\MyPipelineTextureArray.cs" />
-    <Compile Include="Assets\Resources\Scripts\Cam.cs" />
-    <Compile Include="Assets\Resources\Scripts\cameraMovement.cs" />
+    <Compile Include="Assets\Resources\Scripts\DebugVariableViewer.cs" />
+    <Compile Include="Assets\Resources\Scripts\DemoCam.cs" />
+    <Compile Include="Assets\Resources\Scripts\FirstTestCam.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotation.cs" />
-    <Compile Include="Assets\Resources\Scripts\Test.cs" />
+    <Compile Include="Assets\Resources\Scripts\SecondTestCam.cs" />
     <None Include="Assets\Resources\Shader\ClearTexture.compute" />
     <None Include="Assets\Resources\Shader\CountRedPixels.compute" />
     <None Include="Assets\Resources\Shader\UVRenderer.shader" />
-    <None Include="Assets\Resources\Shader\WorldPosOSS.compute" />
+    <None Include="Assets\Resources\Shader\ObjectSpaceComputeShader.compute" />
     <None Include="Assets\Resources\Textures\Credits.txt" />
-    <None Include="Assets\Resources\Shader\ReadBack.shader" />
     <None Include="Assets\Resources\Shader\ObjectSpaceShader.shader" />
     <None Include="Assets\Resources\Shader\UVCoordReader.compute" />
     <Reference Include="Unity.RenderPipelines.Core.Editor">

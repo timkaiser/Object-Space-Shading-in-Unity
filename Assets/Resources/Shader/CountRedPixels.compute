@@ -1,12 +1,15 @@
-﻿// Each #kernel tells which function to compile; you can have many kernels
+﻿// This shader counts the amount of rend pixels in a texture
+// Input: Texture
+// Output: uint, Number of red pixels in Texture
+//
+// This is used to make statistics about how efficient the object space shading is (first test).
+
 #pragma kernel Count
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
 Texture2D<float3> Input;
 RWStructuredBuffer<uint> Output;
 
-[numthreads(8,8,1)]
+[numthreads(8, 8, 1)]
 void Count(uint3 id : SV_DispatchThreadID)
 {
 	if (Input[id.xy].x == 1) {

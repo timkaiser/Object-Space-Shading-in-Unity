@@ -1,51 +1,7 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
-Cmd: disassembleShader
-  api=4 insize=2002 outsize=3466 ok=1
-Cmd: disassembleShader
-  api=4 insize=2854 outsize=4651 ok=1
-Cmd: disassembleShader
-  api=4 insize=5590 outsize=7905 ok=1
-Cmd: disassembleShader
-  api=4 insize=1918 outsize=3405 ok=1
-Cmd: disassembleShader
-  api=4 insize=1918 outsize=3410 ok=1
-Cmd: disassembleShader
-  api=4 insize=3638 outsize=5392 ok=1
-Cmd: disassembleShader
-  api=4 insize=3934 outsize=5759 ok=1
-Cmd: disassembleShader
-  api=4 insize=2002 outsize=3466 ok=1
-Cmd: disassembleShader
-  api=4 insize=1766 outsize=3169 ok=1
-Cmd: disassembleShader
-  api=4 insize=2054 outsize=3594 ok=1
-Cmd: disassembleShader
-  api=4 insize=2226 outsize=3886 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=4 insize=386 outsize=289 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
