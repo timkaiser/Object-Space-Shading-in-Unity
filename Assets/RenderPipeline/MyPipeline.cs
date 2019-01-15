@@ -41,7 +41,7 @@ public class MyPipeline : RenderPipeline {
     //texture constants
     public const int MIP_MAP_COUNT = 12;
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
-    public const int TILE_SIZE = 64;
+    public const int TILE_SIZE = 8;
 
 
     //compute shader
@@ -92,7 +92,7 @@ public class MyPipeline : RenderPipeline {
             CreateRenderTexture(width, height, RenderTextureFormat.RGInt), //ID and Mip Map
             CreateRenderTexture(width, height, RenderTextureFormat.RGFloat), //UV
             CreateRenderTexture(width, height, RenderTextureFormat.ARGB32), //WorldPos
-            CreateRenderTexture(width, height, RenderTextureFormat.Depth), //Depth
+            CreateRenderTexture(width, height, 32, RenderTextureFormat.Depth), //Depth
         };
 
         //setup rendertargets for read back

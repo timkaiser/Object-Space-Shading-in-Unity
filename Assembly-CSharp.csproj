@@ -68,6 +68,7 @@
     <Compile Include="Assets\Resources\Scripts\FirstTestCam.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotation.cs" />
     <Compile Include="Assets\Resources\Scripts\SecondTestCam.cs" />
+    <Compile Include="Assets\Resources\Scripts\ThirdTestCam.cs" />
     <None Include="Assets\Resources\Shader\ClearTexture.compute" />
     <None Include="Assets\Resources\Shader\CountRedPixels.compute" />
     <None Include="Assets\Resources\Shader\UVRenderer.shader" />
