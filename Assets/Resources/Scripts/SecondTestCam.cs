@@ -6,8 +6,14 @@ using UnityEngine;
 
 public class SecondTestCam : MonoBehaviour {
     //camera positions and angles
+    //Sponza
+    /*
     public static Vector3[] positions = {new Vector3(4, 1.5f, 0), new Vector3(6, 4, -0.5f), new Vector3(-6, 4, -0.5f), new Vector3(0, 4, -3), new Vector3(0, 4, -2)  };
     public static Vector3[] rotations = {new Vector3(-7, -100, 0), new Vector3(8, -80, 0), new Vector3(4, -280, 0), new Vector3(0, 0, 0), new Vector3(0, -90, 0) };
+    */
+
+    public static Vector3[] positions = {new Vector3(20, 60, -12.5f), new Vector3(25, 40, -80), new Vector3(-30, 50, -80), new Vector3(30, 25, 50), new Vector3(35,25,-12.5f)  };
+    public static Vector3[] rotations = {new Vector3(80, -90, 0), new Vector3(7, -40, 0), new Vector3(10, 24, 0), new Vector3(7,200, 0), new Vector3(-10, -90, 0) };
 
     //current position
     public int index = 0;
@@ -22,7 +28,8 @@ public class SecondTestCam : MonoBehaviour {
     void Start() {
         //set starting position
         transform.SetPositionAndRotation(positions[0], Quaternion.Euler(rotations[0]));
-
+        //Debug.Log("Test");
+        //Debug.Break();
         //setup array for tilemasks
         tileMasks = new RenderTexture[positions.Length* GameObject.FindObjectsOfType<MeshFilter>().Length];
     }
@@ -31,6 +38,7 @@ public class SecondTestCam : MonoBehaviour {
     void Update() {
         //return if end is reached
         if (index == positions.Length) {
+            Debug.Break();
             return;
         }
 
@@ -51,10 +59,11 @@ public class SecondTestCam : MonoBehaviour {
             //if end is reached save all images and break
             if (index == positions.Length) {
                 saveAllImages();
-                Debug.Break();
+                //Debug.Break();
                 return;
             }
 
+            //Debug.Break();
             transform.SetPositionAndRotation(positions[index], Quaternion.Euler(rotations[index]));
             
             count = 0;
@@ -70,7 +79,7 @@ public class SecondTestCam : MonoBehaviour {
         for(int i=0; i< tileMasks.Length; i++) {
             int index_tmp = (int)(i / MyPipeline.sceneObjects.Count);
             int objId = i % MyPipeline.sceneObjects.Count;
-            MyPipeline.SaveTexture("SecondTest\\"+MyPipeline.TILE_SIZE+"\\"+cam.pixelWidth+"x"+cam.pixelHeight+"\\"+index_tmp+"_object"+objId, tileMasks[i]);
+            MyPipeline.SaveTexture("SecondTest\\LostEmpire\\"+MyPipeline.TILE_SIZE+"\\"+cam.pixelWidth+"x"+cam.pixelHeight+"\\"+index_tmp+"_object"+objId, tileMasks[i]);
         }
     }
 

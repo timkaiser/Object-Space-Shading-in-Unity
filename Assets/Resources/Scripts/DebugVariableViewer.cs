@@ -13,10 +13,12 @@ public class DebugVariableViewer : MonoBehaviour {
     public List<MyPipeline.ObjData> sceneObjects;
     public Object[] objects;
     public int tilesize = MyPipeline.TILE_SIZE;
-   
+    public int framecount = 0;
+
     //update variables
     private void Update() {
         fps = 1 / Time.deltaTime;
+        tilesize = MyPipeline.TILE_SIZE;
 
         firstPassTargets = MyPipeline.firstPassTargets;
         finalImage = MyPipeline.finalImage;
@@ -24,6 +26,7 @@ public class DebugVariableViewer : MonoBehaviour {
         sceneObjects = MyPipeline.sceneObjects;
 
         objects = Resources.FindObjectsOfTypeAll<Texture>();
+        framecount = Time.frameCount;
     }
     #endif
 }

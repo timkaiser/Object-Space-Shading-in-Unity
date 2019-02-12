@@ -11,6 +11,6 @@ public class Rotation : MonoBehaviour {
 	void Update () {
         //Rotate
        this.transform.Rotate(Vector3.up * speed*Time.deltaTime);
-       this.transform.Rotate(Vector3.left * speed * Time.deltaTime * 2);
+       //this.transform.Rotate(Vector3.left * speed * Time.deltaTime * 2);
     }
 }

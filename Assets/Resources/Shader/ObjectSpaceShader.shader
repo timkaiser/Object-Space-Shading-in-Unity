@@ -56,6 +56,7 @@ Shader "Custom/ObjectSpaceShader"
 		int _ID;
 		int _TextureSize;
 		sampler2D _TextureAtlas;
+		sampler2D _Texture;
 
 		//vertex shader (same for both passes)
 		v2f vert(appdata_base v) {
@@ -80,6 +81,7 @@ Shader "Custom/ObjectSpaceShader"
 			o.idAndMip.y = mipLevel;
 			o.uv = i.uv;
 
+			//o.uv = tex2D(_Texture,i.uv);
 			return o;
 
 			#else	//READ BACK
@@ -89,7 +91,7 @@ Shader "Custom/ObjectSpaceShader"
 			float2 uv = i.uv / powMipLevel;
 			uv.x /= 2.0;  //because the atlas is twice the width of the texture
 
-			fOut o = { tex2D(_TextureAtlas, atlasOffset + uv)};
+			fOut o = { tex2D(_TextureAtlas, atlasOffset + uv) };
 			return o;
 			#endif
 		}

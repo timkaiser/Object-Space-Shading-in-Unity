@@ -10,6 +10,7 @@ Texture2D<int2> IDandMip;
 Texture2D<float2> UV;
 int ID;
 RWTexture2D<float3> Output;
+RWBuffer<int> Stats;
 
 
 // This methode takes uv coords between (0,0) and (1,1) and mipmap level and calculates position in texture atlas
@@ -37,7 +38,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 {
 	// return if displayed object is not current object
 	if (IDandMip[id.xy].x != ID) { return; }
-
+	Stats[0] += 1;
 	//get dimensions of the tilemask
 	uint width, height;
 	Output.GetDimensions(width, height);

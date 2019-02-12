@@ -1,7 +1,9 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.10f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=390 outsize=485 ok=1
+  error: 1 plat 4 at ObjectSpaceComputeShader.compute(84): implicit truncation of vector type
+  error: 1 plat 4 at ObjectSpaceComputeShader.compute(95): 'mul': implicit truncation of vector type
+  api=4 insize=4225 outsize=2689 ok=1
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -12,12 +14,28 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: compileComputeKernel
-  error: 1 plat 4 at ObjectSpaceComputeShader.compute(83): implicit truncation of vector type
-  error: 2 plat 4 at ObjectSpaceComputeShader.compute(89): syntax error: unexpected token '.'
-  error: 1 plat 4 at ObjectSpaceComputeShader.compute(93): 'mul': implicit truncation of vector type
-  error: 2 plat 4 at ObjectSpaceComputeShader.compute(94): syntax error: unexpected token '['
-  api=4 insize=3350 outsize=0 ok=0
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

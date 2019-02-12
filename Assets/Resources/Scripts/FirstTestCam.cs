@@ -13,8 +13,18 @@ public class FirstTestCam : MonoBehaviour {
     public bool loop = false;
 
     //positions along the path the camera is moving
-    public Vector3[] positions = { new Vector3(6, 4, -0.5f), new Vector3(4, 4, -2.5f), new Vector3(0, 4, -2) };
-    public Vector3[] rotations = { new Vector3(8, -80, 0), new Vector3(8, -24, 0), new Vector3(4.5f, -90, 0) };
+    //SPONZA
+    /*
+    public static Vector3[] positions = { new Vector3(6, 4, -0.5f), new Vector3(4, 4, -2.5f), new Vector3(0, 4, -2) };
+    public static Vector3[] rotations = { new Vector3(8, -80, 0), new Vector3(8, -24, 0), new Vector3(4.5f, -90, 0) };
+    string name = "Sponza";
+    */
+
+    //lost empire
+    public static Vector3[] positions = { new Vector3(20, 60, -12.5f), new Vector3(20, 26.5f, -12.5f), new Vector3(-10, 26.5f, -12.5f) };
+    public static Vector3[] rotations = { new Vector3(80, -90, 0), new Vector3(10, -90, 0), new Vector3(-10, -3, 0) };
+    string name = "lostEmpire";
+
     //distance between positions
     public float[] distances = { 1, 1 };
 
@@ -27,7 +37,7 @@ public class FirstTestCam : MonoBehaviour {
     void Start () {
         //set starting position
         transform.SetPositionAndRotation(positions[0],Quaternion.Euler(rotations[0]));
-
+        
         //reset log file
         MyPipeline.ResetLog();
 	}
@@ -41,7 +51,7 @@ public class FirstTestCam : MonoBehaviour {
         if (index == positions.Length) {
 
             //save logs
-            MyPipeline.SaveLogCSV("FirstTest");
+            MyPipeline.SaveLogCSV(name+" FirstTest");
             Debug.Break();
             if (loop) { //return to start if loop is enabled
                 transform.SetPositionAndRotation(positions[0], Quaternion.Euler(rotations[0]));

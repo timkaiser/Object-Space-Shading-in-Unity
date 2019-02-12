@@ -41,7 +41,7 @@ public class MyPipeline : RenderPipeline {
     //texture constants
     public const int MIP_MAP_COUNT = 12;
     public const int MAX_TEXTURE_SIZE = 1 << MIP_MAP_COUNT;
-    public const int TILE_SIZE = 8;
+    public const int TILE_SIZE = 64;
 
 
     //compute shader
