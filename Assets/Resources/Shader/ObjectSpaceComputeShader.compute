@@ -81,7 +81,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	
 	//shading _______________________________________________________________________________________________________________
 	//light position (static)
-	float3 lightPos = float3(10, 10, 10);// - worldPos;
+	float3 lightPos = float3(10, 10, 10) - worldPos;
 	//camera position (static)
 	//float3 camPos = float3(5, 4, -0.5);
 	//float3 reflection = 2 * mul(worldNormal, lightPos) * worldNormal - lightPos;
