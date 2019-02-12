@@ -1,0 +1,8 @@
+Textures:
+SOLAR SYSTEM SCOPE
+https://www.solarsystemscope.com/textures/
+(resized texture to 512x512)
+
+
+CC 4.0
+https://creativecommons.org/licenses/by/4.0/deed.de
